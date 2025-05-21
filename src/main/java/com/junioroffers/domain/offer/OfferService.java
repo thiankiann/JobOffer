@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 class OfferService {
     private final OfferRepository offerRepository;
 //    private final OfferMapper offerMapper;
-    private final OfferNotFoundException offerNotFoundException;
+  //  private final OfferNotFoundException offerNotFoundException;
 
     OfferResponseDto findOfferById(String id) {
 //        Optional<Offer> offerById = offerRepository.findOfferById(id);

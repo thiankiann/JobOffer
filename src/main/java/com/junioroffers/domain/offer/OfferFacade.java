@@ -14,7 +14,7 @@ public class OfferFacade {
     public List<OfferResponseDto> findOffers(){
         return null;
     }
-    public List<OfferResponseDto> fetchAllOffersAndSaveAllifNotExist(){ return null;}
+   // public List<OfferResponseDto> fetchAllOffersAndSaveAllifNotExist(){ return null;}
 
     public OfferResponseDto findOfferById(String id){
         return offerService.findOfferById(id);
