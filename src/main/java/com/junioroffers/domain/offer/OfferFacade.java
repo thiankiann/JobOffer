@@ -11,14 +11,14 @@ public class OfferFacade {
 
     private final OfferService offerService;
 
-    public List<OfferResponseDto> findOffers(){
-        return null;
-    }
+//    public List<OfferResponseDto> findOffers(){
+//        return null;
+//    }
    // public List<OfferResponseDto> fetchAllOffersAndSaveAllifNotExist(){ return null;}
 
     public OfferResponseDto findOfferById(String id){
         return offerService.findOfferById(id);
     }
 
-    public OfferResponseDto saveOffer(OfferRequestDto offerDto){ return null;}
+   // public OfferResponseDto saveOffer(OfferRequestDto offerDto){ return null;}
 }

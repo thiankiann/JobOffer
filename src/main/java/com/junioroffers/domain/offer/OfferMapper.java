@@ -10,14 +10,4 @@ class OfferMapper {
 
     public final OfferService offerService;
 
-//    OfferResponseDto mapOfferToOfferResponseDto(Optional<Offer> jobOfferResponseDto) {
-//        return  offerService.findOfferById()
-//                .map( offer -> new OfferResponseDto(
-//                        offer.id()
-//                        ),
-                                //.toString());
-//  return repository.findUserByName(username)
-//                .map(user -> new UserDto(user.id(),user.password(),user.username()))
-//                        .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND) );
-//    }
 }
