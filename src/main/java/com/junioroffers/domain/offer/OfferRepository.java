@@ -6,6 +6,5 @@ import java.util.Optional;
 
 
 interface OfferRepository {
-
    Optional<Offer> findOfferById(String id);
 }
