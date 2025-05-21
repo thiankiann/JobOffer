@@ -1,11 +1,10 @@
 package com.junioroffers.domain.offer;
-
-import com.junioroffers.domain.loginandregister.dto.RegisterUserDto;
-import com.junioroffers.domain.loginandregister.dto.RegistrationResultDto;
 import org.junit.jupiter.api.Test;
 
 class OfferFacadeTest {
-
+    OfferFacade loginFacade = new OfferFacade(
+            new OfferService(new InMemoryOfferRepository(),new OfferNotFoundException("Offer NotFound Exception"))
+                );
     @Test
     public void should_save_4_offers_when_there_are_no_offers_in_database() {
         //given

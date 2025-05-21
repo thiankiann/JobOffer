@@ -1,16 +1,13 @@
 package com.junioroffers.domain.offer;
 
 
-import com.junioroffers.domain.offer.dto.JobOfferResponseDto;
 import com.junioroffers.domain.offer.dto.OfferResponseDto;
 import lombok.AllArgsConstructor;
-
-import java.util.Optional;
 
 @AllArgsConstructor
 class OfferService {
     private final OfferRepository offerRepository;
-    private final OfferMapper offerMapper;
+//    private final OfferMapper offerMapper;
     private final OfferNotFoundException offerNotFoundException;
 
     OfferResponseDto findOfferById(String id) {
