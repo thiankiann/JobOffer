@@ -1,4 +1,6 @@
 package com.junioroffers.domain.offer;
+import com.junioroffers.domain.offer.dto.OfferRequestDto;
+import com.junioroffers.domain.offer.dto.OfferResponseDto;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -55,9 +57,17 @@ class OfferFacadeTest {
     @Test
     public void should_find_offer_by_id_when_offer_was_saved() {
         //given
+        OfferRequestDto offerRequestDto = new OfferRequestDto(
+                "Tesla",
+                "ingeneer",
+                "£200 000",
+                "www.tesla.com/offer83698"
+            );
+        OfferResponseDto offerResponseDto = offerFacade.saveOffer(offerRequestDto);
 
         //when
-
+        OfferResponseDto offerById = offerFacade.findOfferById(offerResponseDto.id());
         //then
+        assertThat(offerById).isNotNull();
     }
 }

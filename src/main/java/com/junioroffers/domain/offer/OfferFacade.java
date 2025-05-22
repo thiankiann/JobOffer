@@ -20,5 +20,7 @@ public class OfferFacade {
         return offerService.findOfferById(id);
     }
 
-   // public OfferResponseDto saveOffer(OfferRequestDto offerDto){ return null;}
+    public OfferResponseDto saveOffer(OfferRequestDto offerDto){
+        return offerService.saveOffer(offerDto);
+    }
 }

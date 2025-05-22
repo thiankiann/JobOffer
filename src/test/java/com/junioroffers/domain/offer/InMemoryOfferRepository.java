@@ -14,4 +14,18 @@ public class InMemoryOfferRepository implements OfferRepository {
     public Optional<Offer> findOfferById(String id) {
         return Optional.ofNullable(database.get(id));
     }
+
+    @Override
+    public Offer save(Offer entity) {
+        UUID id = UUID.randomUUID();
+        Offer offer = new Offer(
+                id.toString(),
+                entity.companyName(),
+                entity.position(),
+                entity.salary(),
+                entity.offerUrl()
+        );
+        database.put(offer.companyName(),offer);
+        return offer;
+    }
 }
