@@ -26,13 +26,5 @@ public class LoginAndRegisterFacade {
                 .build();
         User savedUser = repository.save(user);
         return new RegistrationResultDto(savedUser.id(), true, savedUser.username());
-//    public RegistrationResultDto register(RegisterUserDto registerUserDto){
-//        boolean isUserAlreadyExist = findByUserName(registerUserDto.username()) != null;
-//        if( !isUserAlreadyExist){
-//            return repository.saveUser(registerUserDto);
-//
-//        }
-//        return new RegistrationResultDto(registerUserDto.id(),true,registerUserDto.username() );
-//    }
     }
 }
