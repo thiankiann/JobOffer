@@ -25,7 +25,7 @@ public class InMemoryOfferRepository implements OfferRepository {
                 entity.salary(),
                 entity.offerUrl()
         );
-        database.put(offer.companyName(),offer);
+        database.put(offer.id(),offer);
         return offer;
     }
 }

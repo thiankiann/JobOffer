@@ -59,7 +59,7 @@ class OfferFacadeTest {
         //given
         OfferRequestDto offerRequestDto = new OfferRequestDto(
                 "Tesla",
-                "ingeneer",
+                "engineer",
                 "£200 000",
                 "www.tesla.com/offer83698"
             );
@@ -69,5 +69,13 @@ class OfferFacadeTest {
         OfferResponseDto offerById = offerFacade.findOfferById(offerResponseDto.id());
         //then
         assertThat(offerById).isNotNull();
+        assertThat(offerById).isEqualTo(OfferResponseDto.builder()
+                .id(offerResponseDto.id())
+                .companyName("Tesla")
+                .position("engineer")
+                .salary("£200 000")
+                .offerUrl("www.tesla.com/offer83698")
+                .build()
+        );
     }
 }
