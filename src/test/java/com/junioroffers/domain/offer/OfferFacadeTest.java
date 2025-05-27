@@ -17,10 +17,51 @@ class OfferFacadeTest {
     @Test
     public void should_save_4_offers_when_there_are_no_offers_in_database() {
         //given
-
+        assertThat(offerFacade.findAllOffers())
+                .isEmpty();
+        OfferRequestDto offerRequestDto = new OfferRequestDto(
+                "Tesla",
+                "engineer",
+                "£200 000",
+                "www.tesla.com/offer83698"
+        );
+        OfferRequestDto offerRequestDto2 = new OfferRequestDto(
+                "Tesla",
+                "mechanic",
+                "£80 000",
+                "www.tesla.com/offer83698"
+        );
+        OfferRequestDto offerRequestDto3 = new OfferRequestDto(
+                "Tesla",
+                "manager",
+                "£400 000",
+                "www.tesla.com/offer83698"
+        );
+        OfferRequestDto offerRequestDto4 = new OfferRequestDto(
+                "Tesla",
+                "owner",
+                "£400 000 000",
+                "www.tesla.com/offer83698"
+        );
         //when
+        OfferResponseDto offerResponseDto = offerFacade.saveOffer(offerRequestDto);
+        OfferResponseDto offerResponseDto2 = offerFacade.saveOffer(offerRequestDto2);
+        OfferResponseDto offerResponseDto3 = offerFacade.saveOffer(offerRequestDto3);
+        OfferResponseDto offerResponseDto4 = offerFacade.saveOffer(offerRequestDto4);
 
         //then
+        assertThat(offerFacade.findAllOffers())
+                .isNotEmpty()
+                        .hasSize(4);
+        assertThat(offerFacade.findOfferById(offerResponseDto.id())).isEqualTo((OfferResponseDto.builder()
+                .id(offerResponseDto.id())
+                .companyName("Tesla")
+                .position("engineer")
+                .salary("£200 000")
+                .offerUrl("www.tesla.com/offer83698")
+                .build())
+        );
+
     }
     @Test
     public void should_save_2_offers_when_repository_had4_added_with_offer_urls() {
@@ -85,6 +126,8 @@ class OfferFacadeTest {
     @Test
     public void should_save_and_find_all_offers() {
         //given
+        assertThat(offerFacade.findAllOffers())
+                .isEmpty();
         OfferRequestDto offerRequestDto = new OfferRequestDto(
                 "Tesla",
                 "engineer",
