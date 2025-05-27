@@ -5,7 +5,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.allOf;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.InstanceOfAssertFactories.iterable;
 import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 
 class OfferFacadeTest {
@@ -78,4 +82,58 @@ class OfferFacadeTest {
                 .build()
         );
     }
+    @Test
+    public void should_save_and_find_all_offers() {
+        //given
+        OfferRequestDto offerRequestDto = new OfferRequestDto(
+                "Tesla",
+                "engineer",
+                "£200 000",
+                "www.tesla.com/offer83698"
+        );
+        OfferRequestDto offerRequestDto2 = new OfferRequestDto(
+                "Tesla",
+                "mechanic",
+                "£80 000",
+                "www.tesla.com/offer83698"
+        );
+        OfferRequestDto offerRequestDto3 = new OfferRequestDto(
+                "Tesla",
+                "manager",
+                "£400 000",
+                "www.tesla.com/offer83698"
+        );
+        //when
+        OfferResponseDto offerResponseDto = offerFacade.saveOffer(offerRequestDto);
+        OfferResponseDto offerResponseDto2 = offerFacade.saveOffer(offerRequestDto2);
+        OfferResponseDto offerResponseDto3 = offerFacade.saveOffer(offerRequestDto3);
+
+        //then
+        assertThat(offerFacade.findAllOffers())
+                .isNotEmpty();
+        assertThat(offerFacade.findOfferById(offerResponseDto.id())).isEqualTo((OfferResponseDto.builder()
+                .id(offerResponseDto.id())
+                .companyName("Tesla")
+                .position("engineer")
+                .salary("£200 000")
+                .offerUrl("www.tesla.com/offer83698")
+                .build())
+        );
+        assertThat(offerFacade.findOfferById(offerResponseDto2.id())).isEqualTo((OfferResponseDto.builder()
+                .id(offerResponseDto2.id())
+                .companyName("Tesla")
+                .position("mechanic")
+                .salary("£80 000")
+                .offerUrl("www.tesla.com/offer83698")
+                .build())
+        );        assertThat(offerFacade.findOfferById(offerResponseDto3.id())).isEqualTo((OfferResponseDto.builder()
+                .id(offerResponseDto3.id())
+                .companyName("Tesla")
+                .position("manager")
+                .salary("£400 000")
+                .offerUrl("www.tesla.com/offer83698")
+                .build())
+        );
+    }
+
 }

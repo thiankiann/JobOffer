@@ -6,6 +6,7 @@ import com.junioroffers.domain.offer.dto.OfferResponseDto;
 import io.micrometer.observation.Observation;
 import lombok.AllArgsConstructor;
 
+import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -47,4 +48,10 @@ class OfferService {
                 savedoffer.salary(),
                 savedoffer.offerUrl());
     }
+
+    List<OfferResponseDto> findAllOffers() {
+      //  List<OfferResponseDto> AllOffersDto = offerRepository.findAllOffers();
+        return offerRepository.findAllOffers();
+    }
+   // List<OfferResponseDto> saveOffers(List<OfferRequestDto> allOfferDto) {}
 }
