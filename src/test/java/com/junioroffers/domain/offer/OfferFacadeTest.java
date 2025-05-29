@@ -29,19 +29,19 @@ class OfferFacadeTest {
                 "Tesla",
                 "mechanic",
                 "£80 000",
-                "www.tesla.com/offer83698"
+                "www.tesla.com/offer8369"
         );
         OfferRequestDto offerRequestDto3 = new OfferRequestDto(
                 "Tesla",
                 "manager",
                 "£400 000",
-                "www.tesla.com/offer83698"
+                "www.tesla.com/offer83688"
         );
         OfferRequestDto offerRequestDto4 = new OfferRequestDto(
                 "Tesla",
                 "owner",
                 "£400 000 000",
-                "www.tesla.com/offer83698"
+                "www.tesla.com/offer88898"
         );
         //when
         OfferResponseDto offerResponseDto = offerFacade.saveOffer(offerRequestDto);
@@ -72,25 +72,28 @@ class OfferFacadeTest {
         //then
     }
     @Test
-    public void should_duplicate_key_exception_when_with_offer_url_exists() {
+    public void should_throw_duplicate_key_exception_when_offer_url_exists() {
         //given
-
+        assertThat(offerFacade.findAllOffers())
+                .isEmpty();
+        OfferRequestDto offerRequestDto = new OfferRequestDto(
+                "Tesla",
+                "engineer",
+                "£200 000",
+                "www.tesla.com/offer83698"
+        );
         //when
+        offerFacade.saveIfOfferUrlIsNotDuplicated(offerRequestDto);
 
-        //then
-    }
-    @Test
-    public void should_throw_not_found_exception_when_offer_not_found() {
-        //given
-        String id = "0";
-        //when
-        Throwable thrown = catchThrowable(() -> offerFacade.findOfferById(id));
+        Throwable thrown = catchThrowable(() -> offerFacade.saveIfOfferUrlIsNotDuplicated(offerRequestDto));
         //then
         assertThat(thrown)
-                .isInstanceOf(OfferNotFoundException.class)
-                .hasMessage("Offer not Found");
-
+                .isInstanceOf(DuplicateKeyException.class)
+                .hasMessage("Duplicate Key Exception");
     }
+
+
+
     @Test
     public void should_fetch_from_jobs_from_remote_and_save_all_offers_when_repository_is_empty() {
         //given

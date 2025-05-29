@@ -12,4 +12,6 @@ interface OfferRepository {
    Offer save(Offer offer);
 
     List<OfferResponseDto> findAllOffers();
+
+    boolean isUrlDuplicated(String offerUrl);
 }

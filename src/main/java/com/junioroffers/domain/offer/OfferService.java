@@ -3,21 +3,23 @@ package com.junioroffers.domain.offer;
 
 import com.junioroffers.domain.offer.dto.OfferRequestDto;
 import com.junioroffers.domain.offer.dto.OfferResponseDto;
-import io.micrometer.observation.Observation;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
-import java.util.Optional;
+
+import static com.junioroffers.domain.offer.OfferMapper.mapOfferRequestDtoToOffer;
+import static com.junioroffers.domain.offer.OfferMapper.mapOfferToOfferResponseDto;
 
 @AllArgsConstructor
 class OfferService {
-    private final OfferRepository offerRepository;
+    private OfferRepository offerRepository;
+  //  private final OfferFetchable offerFetchable;
 
 
     OfferResponseDto findOfferById(String id) {
 
         return offerRepository.findOfferById(id).
-                map( (Offer offer) -> OfferMapper.mapOfferToOfferResponseDto(offer)
+                map( (Offer offer) -> mapOfferToOfferResponseDto(offer)
                 ).orElseThrow(() -> new OfferNotFoundException("Offer not Found"));
 
 
@@ -33,25 +35,41 @@ class OfferService {
 
     }
 
-    OfferResponseDto saveOffer(OfferRequestDto offerDto) {
-        final Offer offer = Offer.builder()
-                .companyName(offerDto.companyName())
-                .position(offerDto.position())
-                .salary(offerDto.salary())
-                .offerUrl(offerDto.offerUrl())
-                .build();
-       Offer savedoffer = offerRepository.save(offer);
-        return new OfferResponseDto(
-                savedoffer.id(),
-                savedoffer.companyName(),
-                savedoffer.position(),
-                savedoffer.salary(),
-                savedoffer.offerUrl());
+    void saveIfOfferIfUrlIsNotDuplicated(OfferRequestDto offerRequestDto) {
+        Offer offer = mapOfferRequestDtoToOffer(offerRequestDto);
+//        try {
+            boolean isUrlDuplicated = offerRepository.isUrlDuplicated(offer.offerUrl());
+            if(!(isUrlDuplicated)) {
+                saveOffer(offerRequestDto);
+            }else {
+                throw new DuplicateKeyException("Duplicate Key Exception");
+            }
+//        } catch (RuntimeException e) {
+//            throw new RuntimeException("RuntimeException!!!");
+//        }
     }
+    OfferResponseDto saveOffer(OfferRequestDto offerRequestDto) {
+      //  saveIfOfferUrlIsNotDuplicated(offerRequestDto);
+        final Offer offer = mapOfferRequestDtoToOffer(offerRequestDto);
+
+
+            Offer savedoffer = offerRepository.save(offer);
+            return mapOfferToOfferResponseDto(savedoffer);
+////
+////        }
+//        boolean isUrlDuplicated = offerFetchable.isUrlDuplicated(offer);
+//            Offer savedoffer = offerRepository.save(offer);
+//            return mapOfferToOfferResponseDto(savedoffer);
+//        }else {
+//
+//        }
+    }
+
+
+
 
     List<OfferResponseDto> findAllOffers() {
       //  List<OfferResponseDto> AllOffersDto = offerRepository.findAllOffers();
         return offerRepository.findAllOffers();
     }
-   // List<OfferResponseDto> saveOffers(List<OfferRequestDto> allOfferDto) {}
 }

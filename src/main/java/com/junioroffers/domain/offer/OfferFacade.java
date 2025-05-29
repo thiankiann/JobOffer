@@ -21,6 +21,12 @@ public class OfferFacade {
     }
 
     public OfferResponseDto saveOffer(OfferRequestDto offerDto){
+
         return offerService.saveOffer(offerDto);
+    }
+    public void saveIfOfferUrlIsNotDuplicated(OfferRequestDto offerRequestDto ){
+
+         offerService.saveIfOfferIfUrlIsNotDuplicated(offerRequestDto );
+       //  return offerRequestDto;
     }
 }

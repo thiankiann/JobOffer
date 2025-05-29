@@ -43,4 +43,37 @@ public class InMemoryOfferRepository implements OfferRepository {
                 .map(OfferMapper::mapOfferToOfferResponseDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public boolean isUrlDuplicated(String offerUrl) {
+        long count = database.values()
+                .stream()
+                .filter(offer -> offer.offerUrl().equals(offerUrl))
+                .count();
+        return count == 1;
+    }
+//    @Override
+//    public boolean isUrlDuplicated(Offer offer) {
+//        boolean  isItContain = database.containsValue(offer);
+////        for (( database.get(offer.offerUrl())):
+////             ) {
+////
+////        }
+////        database.values().stream()
+////                .filter(database -> database.offerUrl().equals(newUrl))
+////                .map(OfferMapper::mapOfferToOfferResponseDto)
+////                .contain
+////
+////
+//
+//        return isItContain;
+//    }
+
+//    @Override
+//    public boolean isUrlDuplicated(Offer offer) {
+//        long count = database.values()
+//                .stream()
+//                .filter((database.get(offer.offerUrl())).equals(offer.offerUrl());
+//        return count == 1;
+//    }
 }
