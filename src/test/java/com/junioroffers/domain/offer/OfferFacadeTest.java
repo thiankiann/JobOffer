@@ -91,7 +91,32 @@ class OfferFacadeTest {
                 .isInstanceOf(DuplicateKeyException.class)
                 .hasMessage("Duplicate Key Exception");
     }
+    @Test
+    public void should_no_throw_duplicate_key_exception_when_offer_url_not_exists() {
+        //given
+        assertThat(offerFacade.findAllOffers())
+                .isEmpty();
+        OfferRequestDto offerRequestDto = new OfferRequestDto(
+                "Tesla",
+                "engineer",
+                "£200 000",
+                "www.tesla.com/offer83698"
+        );
+        OfferRequestDto offerRequestDto2 = new OfferRequestDto(
+                "Tesla",
+                "owner",
+                "£400 000 000",
+                "www.tesla.com/offer88098"
+        );
+        //when
+        offerFacade.saveIfOfferUrlIsNotDuplicated(offerRequestDto);
 
+        Throwable thrown = catchThrowable(() -> offerFacade.saveIfOfferUrlIsNotDuplicated(offerRequestDto2));
+        //then
+        assertThat(offerFacade.findAllOffers())
+                .isNotEmpty()
+                .hasSize(2);
+    }
 
 
     @Test
