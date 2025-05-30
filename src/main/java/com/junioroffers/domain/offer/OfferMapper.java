@@ -23,9 +23,7 @@ public class OfferMapper {
 
     }
     static Offer mapOfferRequestDtoToOffer(OfferRequestDto offerDto) {
-      //  String idd = UUID.randomUUID().toString();
         final Offer offer = Offer.builder()
-       //         .id(idd)
                 .companyName(offerDto.companyName())
                 .position(offerDto.position())
                 .salary(offerDto.salary())

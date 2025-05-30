@@ -35,7 +35,7 @@ class OfferService {
 
     }
 
-    void saveIfOfferIfUrlIsNotDuplicated(OfferRequestDto offerRequestDto) {
+    void saveIfOfferUrlIsNotDuplicated(OfferRequestDto offerRequestDto) {
         Offer offer = mapOfferRequestDtoToOffer(offerRequestDto);
 //        try {
             boolean isUrlDuplicated = offerRepository.isUrlDuplicated(offer.offerUrl());
@@ -47,6 +47,16 @@ class OfferService {
 //        } catch (RuntimeException e) {
 //            throw new RuntimeException("RuntimeException!!!");
 //        }
+    }
+    void isOfferUrlIsNotDuplicated(OfferRequestDto offerRequestDto) {
+        Offer offer = mapOfferRequestDtoToOffer(offerRequestDto);
+
+        boolean isUrlDuplicated = offerRepository.isUrlDuplicated(offer.offerUrl());
+        if(!(isUrlDuplicated)) {
+            saveOffer(offerRequestDto);
+        }else {
+            throw new DuplicateKeyException("Duplicate Key Exception");
+        }
     }
     OfferResponseDto saveOffer(OfferRequestDto offerRequestDto) {
       //  saveIfOfferUrlIsNotDuplicated(offerRequestDto);

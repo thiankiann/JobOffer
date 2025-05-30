@@ -61,15 +61,72 @@ class OfferFacadeTest {
                 .offerUrl("www.tesla.com/offer83698")
                 .build())
         );
+        assertThat(offerFacade.findOfferById(offerResponseDto4.id())).isEqualTo((OfferResponseDto.builder()
+                .id(offerResponseDto4.id())
+                .companyName("Tesla")
+                .position("owner")
+                .salary("£400 000 000")
+                .offerUrl("www.tesla.com/offer88898")
+                .build())
+        );
 
     }
     @Test
     public void should_save_2_offers_when_repository_had4_added_with_offer_urls() {
-        //given
 
-        //when
-
-        //then
+//        //given
+//        assertThat(offerFacade.findAllOffers())
+//                .isEmpty();
+//        OfferRequestDto offerRequestDto = new OfferRequestDto(
+//                "Tesla",
+//                "engineer",
+//                "£200 000",
+//                "www.tesla.com/offer83698"
+//        );
+//        OfferRequestDto offerRequestDto2 = new OfferRequestDto(
+//                "Tesla",
+//                "mechanic",
+//                "£80 000",
+//                "www.tesla.com/offer8469"
+//        );
+//        OfferRequestDto offerRequestDto3 = new OfferRequestDto(
+//                "Tesla",
+//                "manager",
+//                "£400 000",
+//                "www.tesla.com/offer83658"
+//        );
+//        OfferRequestDto offerRequestDto4 = new OfferRequestDto(
+//                "Tesla",
+//                "owner",
+//                "£400 000 000",
+//                "www.tesla.com/offer83338"
+//        );
+//        OfferRequestDto offerRequestDto5 = new OfferRequestDto(
+//                "Tesla",
+//                "owner2",
+//                "£400 000 000",
+//                "www.tesla.com/offer86668"
+//        );
+//        OfferRequestDto offerRequestDto6 = new OfferRequestDto(
+//                "Tesla3",
+//                "owner",
+//                "£400 000 000",
+//                "www.tesla.com/offer885598"
+//        );
+//
+//        OfferResponseDto offerResponseDto = offerFacade.saveOffer(offerRequestDto);
+//        OfferResponseDto offerResponseDto2 = offerFacade.saveOffer(offerRequestDto2);
+//        OfferResponseDto offerResponseDto3 = offerFacade.saveOffer(offerRequestDto3);
+//        OfferResponseDto offerResponseDto4 = offerFacade.saveOffer(offerRequestDto4);
+//
+//        //when
+//        offerFacade.saveIfOfferUrlIsNotDuplicated(offerRequestDto);
+//        offerFacade.saveIfOfferUrlIsNotDuplicated(offerRequestDto2);
+//        offerFacade.saveIfOfferUrlIsNotDuplicated(offerRequestDto3);
+//        offerFacade.saveIfOfferUrlIsNotDuplicated(offerRequestDto4);
+//        offerFacade.saveIfOfferUrlIsNotDuplicated(offerRequestDto5);
+//        offerFacade.saveIfOfferUrlIsNotDuplicated(offerRequestDto6);
+//        //then
     }
     @Test
     public void should_throw_duplicate_key_exception_when_offer_url_exists() {

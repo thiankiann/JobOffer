@@ -20,13 +20,13 @@ public class OfferFacade {
         return offerService.findOfferById(id);
     }
 
-    public OfferResponseDto saveOffer(OfferRequestDto offerDto){
+    public OfferResponseDto saveOffer(OfferRequestDto offerRequestDto){
 
-        return offerService.saveOffer(offerDto);
+        return offerService.saveOffer(offerRequestDto);
     }
     public void saveIfOfferUrlIsNotDuplicated(OfferRequestDto offerRequestDto ){
 
-         offerService.saveIfOfferIfUrlIsNotDuplicated(offerRequestDto );
+         offerService.saveIfOfferUrlIsNotDuplicated(offerRequestDto );
        //  return offerRequestDto;
     }
 }
