@@ -5,6 +5,7 @@ import com.junioroffers.domain.offer.dto.OfferResponseDto;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class OfferFacade {
@@ -14,7 +15,10 @@ public class OfferFacade {
     public List<OfferResponseDto> findAllOffers(){
         return offerService.findAllOffers();
     }
-   // public List<OfferResponseDto> fetchAllOffersAndSaveAllifNotExist(){ return null;}
+    public List<OfferResponseDto> fetchAllOffersAndSaveIfExist(){
+        return offerService.fetchAllOffersAndSaveIfExist().stream()
+                .map(OfferMapper::mapOfferToOfferResponseDto)
+                .collect(Collectors.toList());}
 
     public OfferResponseDto findOfferById(String id){
         return offerService.findOfferById(id);

@@ -1,4 +1,5 @@
 package com.junioroffers.domain.offer;
+import com.junioroffers.domain.offer.dto.JobOfferResponse;
 import com.junioroffers.domain.offer.dto.OfferRequestDto;
 import com.junioroffers.domain.offer.dto.OfferResponseDto;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,10 @@ import static org.assertj.core.api.InstanceOfAssertFactories.iterable;
 import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 
 class OfferFacadeTest {
-    OfferFacade offerFacade = new OfferFacade(new OfferService(new InMemoryOfferRepository()));
+
+    OfferFacade offerFacade = new OfferFacade(new OfferService(
+            new InMemoryOfferRepository(),
+            new InMemoryFetchable(List.of()) ));  //!!! check it later
     @Test
     public void should_save_4_offers_when_there_are_no_offers_in_database() {
         //given
@@ -73,7 +77,7 @@ class OfferFacadeTest {
     }
     @Test
     public void should_save_2_offers_when_repository_had4_added_with_offer_urls() {
-
+//
 //        //given
 //        assertThat(offerFacade.findAllOffers())
 //                .isEmpty();
@@ -179,10 +183,43 @@ class OfferFacadeTest {
     @Test
     public void should_fetch_from_jobs_from_remote_and_save_all_offers_when_repository_is_empty() {
         //given
+//        assertThat(offerFacade.findAllOffers())
+//                .isEmpty();
+//
+//        OfferRequestDto offerRequestDto = new OfferRequestDto("Tesla", "engineer", "£200 000", "www.tesla.com/offer83698");
+//        OfferRequestDto offerRequestDto2 = new OfferRequestDto("Tesla", "mechanic", "£80 000", "www.tesla.com/offer8369");
+//        OfferRequestDto offerRequestDto3 = new OfferRequestDto("Tesla", "manager", "£400 000", "www.tesla.com/offer83688");
+//        OfferRequestDto offerRequestDto4 = new OfferRequestDto("Tesla", "owner", "£400 000 000", "www.tesla.com/offer88898");
+//        List <OfferResponseDto> offerRequestDtoList = List.of(offerResponseDto,offerRequestDto2,offerRequestDto3, offerRequestDto4);
 
+
+
+//        new InMemoryFetchable(
+//                List.of(
+//                        new JobOfferResponse("Tesla","engineer","£200 000","www.tesla.com/offer83698"),
+//                        new JobOfferResponse("Tesla", "mechanic", "£80 000", "www.tesla.com/offer8369"),
+//                        new JobOfferResponse("Tesla", "manager", "£400 000", "www.tesla.com/offer83688"),
+//                        new JobOfferResponse("Tesla", "owner", "£400 000 000", "www.tesla.com/offer88898"),
+//                        new JobOfferResponse("Tesla", "lawyer", "£40 000", "www.tesla.com/offer8865598"),
+//                        new JobOfferResponse("Tesla", "expert", "£100 000", "www.tesla.com/offer84156998")
+//                )
+//        );
+        OfferFacade offerFacade1 = new OfferFacade(new OfferService(
+                new InMemoryOfferRepository(),
+                new InMemoryFetchable(       List.of(
+                        new JobOfferResponse("Tesla","engineer","£200 000","www.tesla.com/offer83698"),
+                        new JobOfferResponse("Tesla", "mechanic", "£80 000", "www.tesla.com/offer8369"),
+                        new JobOfferResponse("Tesla", "manager", "£400 000", "www.tesla.com/offer83688"),
+                        new JobOfferResponse("Tesla", "owner", "£400 000 000", "www.tesla.com/offer88898"),
+                        new JobOfferResponse("Tesla", "lawyer", "£40 000", "www.tesla.com/offer8865598"),
+                        new JobOfferResponse("Tesla", "expert", "£100 000", "www.tesla.com/offer84156998")))
+                ));
         //when
-
+        // zmokuj jakos fetchall
+        List<OfferResponseDto> offerResponseDtosList = offerFacade.fetchAllOffersAndSaveIfExist();
         //then
+   //     assertThat(offerResponseDtosList ).isEqualTo(offerFacade1.findAllOffers().getClass());
+        assertThat(offerResponseDtosList).hasSize(6);
     }
     @Test
     public void should_find_offer_by_id_when_offer_was_saved() {

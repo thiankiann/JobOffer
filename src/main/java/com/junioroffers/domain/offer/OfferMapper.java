@@ -1,9 +1,11 @@
 package com.junioroffers.domain.offer;
 
+import com.junioroffers.domain.offer.dto.JobOfferResponse;
 import com.junioroffers.domain.offer.dto.OfferRequestDto;
 import com.junioroffers.domain.offer.dto.OfferResponseDto;
 import lombok.AllArgsConstructor;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,5 +32,23 @@ public class OfferMapper {
                 .offerUrl(offerDto.offerUrl())
                 .build();
         return offer;
+    }
+
+    static OfferResponseDto mapJobOfferResponseToOfferResponseDto(JobOfferResponse jobOfferResponse) {
+        return OfferResponseDto.builder()
+                .companyName(jobOfferResponse.company())
+                .position(jobOfferResponse.title())
+                .salary(jobOfferResponse.salary())
+                .offerUrl(jobOfferResponse.offerUrl())
+                .build();
+    }
+
+    static Offer mapJobOfferResponseToOffer(JobOfferResponse jobOfferResponse) {
+        return Offer.builder()
+                .companyName(jobOfferResponse.company())
+                .position(jobOfferResponse.title())
+                .salary(jobOfferResponse.salary())
+                .offerUrl(jobOfferResponse.offerUrl())
+                .build();
     }
 }
