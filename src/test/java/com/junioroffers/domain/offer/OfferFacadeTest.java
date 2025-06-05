@@ -77,10 +77,25 @@ class OfferFacadeTest {
     }
     @Test
     public void should_save_2_offers_when_repository_had4_added_with_offer_urls() {
-//
+
 //        //given
 //        assertThat(offerFacade.findAllOffers())
 //                .isEmpty();
+//        OfferFacade offerFacade = new OfferFacade(new OfferService(
+//                new InMemoryOfferRepository(),
+//                new InMemoryFetchable(List.of()) ));
+//     ;
+//
+//        // when
+//        List<OfferResponseDto> response = offerFacade.fetchAllOffersAndSaveIfExist();
+//
+//        // then
+//        assertThat(List.of(
+//                        response.get(0).offerUrl(),
+//                        response.get(1).offerUrl()
+//                )
+//        ).containsExactlyInAnyOrder("https://someurl.pl/5", "https://someother.pl/6");
+
 //        OfferRequestDto offerRequestDto = new OfferRequestDto(
 //                "Tesla",
 //                "engineer",
@@ -185,6 +200,17 @@ class OfferFacadeTest {
         //given
         assertThat(offerFacade.findAllOffers())
                 .isEmpty();
+        OfferFacade offerFacade = new OfferFacade(new OfferService(
+                new InMemoryOfferRepository(),
+                new InMemoryFetchable(  List.of(
+                        new JobOfferResponse("Tesla","engineer","£200 000","www.tesla.com/offer83698"),
+                        new JobOfferResponse("Tesla", "mechanic", "£80 000", "www.tesla.com/offer8369"),
+                        new JobOfferResponse("Tesla", "manager", "£400 000", "www.tesla.com/offer83688"),
+                        new JobOfferResponse("Tesla", "owner", "£400 000 000", "www.tesla.com/offer88898"),
+                        new JobOfferResponse("Tesla", "lawyer", "£40 000", "www.tesla.com/offer8865598"),
+                        new JobOfferResponse("Tesla", "expert", "£100 000", "www.tesla.com/offer84156998")
+                )) ));
+
 
         //when
 

@@ -16,13 +16,14 @@ class InMemoryFetchable implements OfferFetchable{
 
     @Override
     public List<JobOfferResponse> fetchAllOffers() {
-        return    List.of(
-                new JobOfferResponse("Tesla","engineer","£200 000","www.tesla.com/offer83698"),
-                new JobOfferResponse("Tesla", "mechanic", "£80 000", "www.tesla.com/offer8369"),
-                new JobOfferResponse("Tesla", "manager", "£400 000", "www.tesla.com/offer83688"),
-                new JobOfferResponse("Tesla", "owner", "£400 000 000", "www.tesla.com/offer88898"),
-                new JobOfferResponse("Tesla", "lawyer", "£40 000", "www.tesla.com/offer8865598"),
-                new JobOfferResponse("Tesla", "expert", "£100 000", "www.tesla.com/offer84156998")
-        );
+        return   listOfOffers;
+//                List.of(
+//                new JobOfferResponse("Tesla","engineer","£200 000","www.tesla.com/offer83698"),
+//                new JobOfferResponse("Tesla", "mechanic", "£80 000", "www.tesla.com/offer8369"),
+//                new JobOfferResponse("Tesla", "manager", "£400 000", "www.tesla.com/offer83688"),
+//                new JobOfferResponse("Tesla", "owner", "£400 000 000", "www.tesla.com/offer88898"),
+//                new JobOfferResponse("Tesla", "lawyer", "£40 000", "www.tesla.com/offer8865598"),
+//                new JobOfferResponse("Tesla", "expert", "£100 000", "www.tesla.com/offer84156998")
+//        );
     }
 }
