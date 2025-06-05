@@ -58,13 +58,13 @@ public class InMemoryOfferRepository implements OfferRepository {
     @Override
     public List<Offer> saveAll(List<Offer> offers) {
 
-//        return offers.stream()
-//                .map(this::save)
-//                .toList();
+        return offers.stream()
+                .map(this::save)    //nie czaje jak to dziala
+                .toList();
 
-        offers.stream()
-                .map(offer -> database.put((offer.id()), offer));
-        return offers;
+//        offers.stream()
+//                .map(offer -> database.put((offer.id()), offer));  //nie wiem czemu to nie dziala
+//        return offers;
     }
 
 }
