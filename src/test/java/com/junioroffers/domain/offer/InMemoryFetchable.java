@@ -6,7 +6,6 @@ import java.util.List;
 
 class InMemoryFetchable implements OfferFetchable{
 //!!! check it later
-//List<JobOfferResponse> listOfOffers;
     List<JobOfferResponse> listOfOffers;
     InMemoryFetchable(List<JobOfferResponse> listOfOffers) {
         this.listOfOffers = listOfOffers;
@@ -25,6 +24,5 @@ class InMemoryFetchable implements OfferFetchable{
                 new JobOfferResponse("Tesla", "lawyer", "£40 000", "www.tesla.com/offer8865598"),
                 new JobOfferResponse("Tesla", "expert", "£100 000", "www.tesla.com/offer84156998")
         );
-
     }
 }

@@ -183,8 +183,8 @@ class OfferFacadeTest {
     @Test
     public void should_fetch_from_jobs_from_remote_and_save_all_offers_when_repository_is_empty() {
         //given
-//        assertThat(offerFacade.findAllOffers())
-//                .isEmpty();
+        assertThat(offerFacade.findAllOffers())
+                .isEmpty();
 //
 //        OfferRequestDto offerRequestDto = new OfferRequestDto("Tesla", "engineer", "£200 000", "www.tesla.com/offer83698");
 //        OfferRequestDto offerRequestDto2 = new OfferRequestDto("Tesla", "mechanic", "£80 000", "www.tesla.com/offer8369");

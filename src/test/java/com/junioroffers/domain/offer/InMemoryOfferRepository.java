@@ -57,59 +57,14 @@ public class InMemoryOfferRepository implements OfferRepository {
 
     @Override
     public List<Offer> saveAll(List<Offer> offers) {
-//        Map<Long,Album> db = new HashMap<>();
-//        AtomicInteger index = new AtomicInteger(0);
-//
-//        @Override
-//        public Album save(final Album album) {
-//            long index = this.index.getAndIncrement();
-//            db.put(index,album);
-//            album.setId(index);
-//            return album;
-//        }
-//        List<Offer> offersList = offers.stream()
+
+//        return offers.stream()
 //                .map(this::save)
 //                .toList();
-       // database.values().addAll(offers);
-       // database.put(offers.get(id))
-//        for (:
-//             ) {
-//
-//        }
+
         offers.stream()
-                .map(offer -> database.put((offer.id()).toString(),offer));
+                .map(offer -> database.put((offer.id()), offer));
         return offers;
-
-
-
-
-//        return database.values().forEach(
-//                (offer -> database.put((offer.id()).toString(),offer))
-//                        .collect(Collectors.toList()));
     }
-//    @Override
-//    public boolean isUrlDuplicated(Offer offer) {
-//        boolean  isItContain = database.containsValue(offer);
-////        for (( database.get(offer.offerUrl())):
-////             ) {
-////
-////        }
-////        database.values().stream()
-////                .filter(database -> database.offerUrl().equals(newUrl))
-////                .map(OfferMapper::mapOfferToOfferResponseDto)
-////                .contain
-////
-////
-//
-//        return isItContain;
-//    }
-
-//    @Override
-//    public boolean isUrlDuplicated(Offer offer) {
-//        long count = database.values()
-//                .stream()
-//                .filter((database.get(offer.offerUrl())).equals(offer.offerUrl());
-//        return count == 1;
-//    }
 
 }
