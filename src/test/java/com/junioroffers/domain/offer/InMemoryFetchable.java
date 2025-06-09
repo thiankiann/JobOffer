@@ -11,9 +11,6 @@ class InMemoryFetchable implements OfferFetchable{
         this.listOfOffers = listOfOffers;
     }
 
-//    InMemoryFetchable() {
-//    }
-
     @Override
     public List<JobOfferResponse> fetchAllOffers() {
         return   listOfOffers;

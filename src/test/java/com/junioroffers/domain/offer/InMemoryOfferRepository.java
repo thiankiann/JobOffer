@@ -24,6 +24,9 @@ public class InMemoryOfferRepository implements OfferRepository {
 
     @Override
     public Offer save(Offer entity) {
+        if (database.values().stream().anyMatch(offer -> offer.offerUrl().equals(entity.offerUrl()))) {
+            throw new OfferDuplicateException(entity.offerUrl());
+        }
         UUID id = UUID.randomUUID();
         Offer offer = new Offer(
                 id.toString(),
@@ -58,13 +61,14 @@ public class InMemoryOfferRepository implements OfferRepository {
     @Override
     public List<Offer> saveAll(List<Offer> offers) {
 
-        return offers.stream()
-                .map(this::save)    //nie czaje jak to dziala
-                .toList();
+//        return offers.stream()
+//                .map(this::save)    //nie czaje jak to dziala
+//                .toList();
 
-//        offers.stream()
-//                .map(offer -> database.put((offer.id()), offer));  //nie wiem czemu to nie dziala
-//        return offers;
+        offers.stream()
+                .map(offer -> database.put((offer.id()), offer))
+                .collect(Collectors.toList());  //nie wiem czemu to nie dziala
+        return offers;
     }
 
 }

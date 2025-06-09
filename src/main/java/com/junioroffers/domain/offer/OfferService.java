@@ -52,7 +52,7 @@ class OfferService {
 //    }
     OfferResponseDto saveOffer(OfferRequestDto offerRequestDto) {
       //  saveIfOfferUrlIsNotDuplicated(offerRequestDto);
-        final Offer offer = mapOfferRequestDtoToOffer(offerRequestDto);
+         Offer offer = mapOfferRequestDtoToOffer(offerRequestDto);
 
 
             Offer savedoffer = offerRepository.save(offer);
