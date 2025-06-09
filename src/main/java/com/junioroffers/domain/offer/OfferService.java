@@ -28,16 +28,18 @@ class OfferService {
         Offer offer = mapOfferRequestDtoToOffer(offerRequestDto);
         List<OfferResponseDto> allUnfiltrateedOffers = offerRepository.findAllOffers();
 
-      //  try {
+        try {
             boolean isUrlDuplicated = offerRepository.isUrlDuplicated(offer.offerUrl());
             if(!(isUrlDuplicated)) {
                 saveOffer(offerRequestDto);
+             //   Offer savedoffer = offerRepository.save(offer);
+              //  return mapOfferToOfferResponseDto(savedoffer);
             }else {
                 throw new DuplicateKeyException("Duplicate Key Exception");
             }
-//        } catch (RuntimeException e) {
-//            throw new RuntimeException("RuntimeException!!!");
-//        }
+        } catch (RuntimeException e) {
+            throw new DuplicateKeyException("Duplicate Key Exception");
+        }
     }
 //    boolean isOfferUrlIsNotDuplicated(OfferRequestDto offerRequestDto) {
 //        Offer offer = mapOfferRequestDtoToOffer(offerRequestDto);
@@ -50,6 +52,9 @@ class OfferService {
 //            throw new DuplicateKeyException("Duplicate Key Exception");
 //        }
 //    }
+
+
+
     OfferResponseDto saveOffer(OfferRequestDto offerRequestDto) {
       //  saveIfOfferUrlIsNotDuplicated(offerRequestDto);
          Offer offer = mapOfferRequestDtoToOffer(offerRequestDto);
@@ -67,7 +72,7 @@ class OfferService {
              .collect(Collectors.toList());
  }
 
- List<Offer> fetchAllOffersAndSaveIfExist(){
+ List<Offer>  fetchAllOffersAndSaveIfExist(){
      List<Offer> allOffers = fetchAllOffers();
      List<Offer> offers = filterNotExistingOffers(allOffers);
      try {

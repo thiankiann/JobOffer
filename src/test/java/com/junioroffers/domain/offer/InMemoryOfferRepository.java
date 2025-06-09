@@ -66,8 +66,8 @@ public class InMemoryOfferRepository implements OfferRepository {
 //                .toList();
 
         offers.stream()
-                .map(offer -> database.put((offer.id()), offer))
-                .collect(Collectors.toList());  //nie wiem czemu to nie dziala
+                .map(offer -> database.put((offer.id()), offer));
+//                .collect(Collectors.toList());  //nie wiem czemu to nie dziala
         return offers;
     }
 

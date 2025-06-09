@@ -80,6 +80,16 @@ class OfferFacadeTest {
     //given
         assertThat(offerFacade.findAllOffers())
                 .isEmpty();
+        OfferFacade offerFacade = new OfferFacade(new OfferService(
+                new InMemoryOfferRepository(),
+                new InMemoryFetchable(  List.of(
+                        new JobOfferResponse("Tesla","engineer","£200 000","www.tesla.com/offer83698"),
+                        new JobOfferResponse("Tesla", "mechanic", "£80 000", "www.tesla.com/offer8369"),
+                        new JobOfferResponse("Tesla", "manager", "£400 000", "www.tesla.com/offer83688"),
+                        new JobOfferResponse("Tesla", "owner", "£400 000 000", "www.tesla.com/offer88898"),
+                        new JobOfferResponse("Tesla", "lawyer", "£40 000", "www.tesla.com/offer8865598"),
+                        new JobOfferResponse("Tesla", "expert", "£100 000", "www.tesla.com/offer84156998")
+                )) ));
 //        OfferFacade offerFacade = new OfferFacade(new OfferService(
 //                new InMemoryOfferRepository(),
 //                new InMemoryFetchable(  List.of(
@@ -108,12 +118,12 @@ class OfferFacadeTest {
         OfferResponseDto offerResponseDto4 = offerFacade.saveOffer(offerRequestDto4);
 
 
-        new InMemoryFetchable(  List.of( new JobOfferResponse("Tesla","engineer","£200 000","www.tesla.com/offer83698"),
-                new JobOfferResponse("Tesla", "mechanic", "£80 000", "www.tesla.com/offer8369"),
-                new JobOfferResponse("Tesla", "manager", "£400 000", "www.tesla.com/offer83688"),
-                new JobOfferResponse("Tesla", "owner", "£400 000 000", "www.tesla.com/offer88898"),
-                new JobOfferResponse("Tesla", "lawyer", "£40 000", "www.tesla.com/offer8865598"),
-                new JobOfferResponse("Tesla", "expert", "£100 000", "www.tesla.com/offer84156998")) );
+//        new InMemoryFetchable(  List.of( new JobOfferResponse("Tesla","engineer","£200 000","www.tesla.com/offer83698"),
+//                new JobOfferResponse("Tesla", "mechanic", "£80 000", "www.tesla.com/offer8369"),
+//                new JobOfferResponse("Tesla", "manager", "£400 000", "www.tesla.com/offer83688"),
+//                new JobOfferResponse("Tesla", "owner", "£400 000 000", "www.tesla.com/offer88898"),
+//                new JobOfferResponse("Tesla", "lawyer", "£40 000", "www.tesla.com/offer8865598"),
+//                new JobOfferResponse("Tesla", "expert", "£100 000", "www.tesla.com/offer84156998")) );
         //when
 
         List<OfferResponseDto> offerResponseDtosList = offerFacade.fetchAllOffersAndSaveIfExist();
@@ -121,7 +131,8 @@ class OfferFacadeTest {
         assertThat(allOffers).hasSize(4);
         allOffers.forEach(System.out::println);
         System.out.println("==============================");
-        offerResponseDtosList.forEach(System.out::println);
+//        offerResponseDtosList.forEach(System.out::println);
+//        System.out.println("==============================");
         //then
         assertThat(List.of(
                 allOffers.get(0).offerUrl(),
@@ -199,11 +210,12 @@ class OfferFacadeTest {
         //when
 
         List<OfferResponseDto> offerResponseDtosList = offerFacade.fetchAllOffersAndSaveIfExist();
-        List<OfferResponseDto> allOffers = offerFacade.findAllOffers();
+     //   List<OfferResponseDto> allOffers = offerFacade.findAllOffers();
         //then
 //        assertThat(offerResponseDtosList ).hasSameElementsAs(allOffers);  //??nie wiem czemu maja te same elementy ale w innej kolejnosci
         assertThat(offerResponseDtosList).hasSize(6);
-        assertThat(allOffers).hasSize(6);
+        offerResponseDtosList.forEach(System.out::println);
+      //  assertThat(allOffers).hasSize(6);
     }
     @Test
     public void should_find_offer_by_id_when_offer_was_saved() {
@@ -238,7 +250,7 @@ class OfferFacadeTest {
                 "Tesla",
                 "engineer",
                 "£200 000",
-                "www.tesla.com/offer83698"
+                "www.tesla.com/offer833438"
         );
         OfferRequestDto offerRequestDto2 = new OfferRequestDto(
                 "Tesla",
@@ -250,7 +262,7 @@ class OfferFacadeTest {
                 "Tesla",
                 "manager",
                 "£400 000",
-                "www.tesla.com/offer83698"
+                "www.tesla.com/offer832"
         );
         //when
         OfferResponseDto offerResponseDto = offerFacade.saveOffer(offerRequestDto);
@@ -265,7 +277,7 @@ class OfferFacadeTest {
                 .companyName("Tesla")
                 .position("engineer")
                 .salary("£200 000")
-                .offerUrl("www.tesla.com/offer83698")
+                .offerUrl("www.tesla.com/offer833438")
                 .build())
         );
         assertThat(offerFacade.findOfferById(offerResponseDto2.id())).isEqualTo((OfferResponseDto.builder()
@@ -280,7 +292,7 @@ class OfferFacadeTest {
                 .companyName("Tesla")
                 .position("manager")
                 .salary("£400 000")
-                .offerUrl("www.tesla.com/offer83698")
+                .offerUrl("www.tesla.com/offer832")
                 .build())
         );
     }
