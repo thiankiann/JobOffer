@@ -3,48 +3,94 @@ package com.junioroffers.domain.offer;
 
 import com.junioroffers.domain.offer.dto.OfferRequestDto;
 import com.junioroffers.domain.offer.dto.OfferResponseDto;
-import io.micrometer.observation.Observation;
 import lombok.AllArgsConstructor;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.junioroffers.domain.offer.OfferMapper.mapOfferRequestDtoToOffer;
+import static com.junioroffers.domain.offer.OfferMapper.mapOfferToOfferResponseDto;
 
 @AllArgsConstructor
 class OfferService {
     private final OfferRepository offerRepository;
+    private final OfferFetchable offerFetchable;
 
 
     OfferResponseDto findOfferById(String id) {
 
         return offerRepository.findOfferById(id).
-                map( (Offer offer) -> OfferMapper.mapOfferToOfferResponseDto(offer)
+                map( (Offer offer) -> mapOfferToOfferResponseDto(offer)
                 ).orElseThrow(() -> new OfferNotFoundException("Offer not Found"));
-
-
-//        return offerRepository.findOfferById(id)
-//                .map( offer -> new OfferResponseDto(
-//                                    offer.id(),
-//                                    offer.companyName(),
-//                                    offer.position(),
-//                                    offer.salary(),
-//                                    offer.offerUrl()
-//                        )
-//                ).orElseThrow(() -> new OfferNotFoundException("Offer not Found"));
-
     }
 
-    OfferResponseDto saveOffer(OfferRequestDto offerDto) {
-        final Offer offer = Offer.builder()
-                .companyName(offerDto.companyName())
-                .position(offerDto.position())
-                .salary(offerDto.salary())
-                .offerUrl(offerDto.offerUrl())
-                .build();
-       Offer savedoffer = offerRepository.save(offer);
-        return new OfferResponseDto(
-                savedoffer.id(),
-                savedoffer.companyName(),
-                savedoffer.position(),
-                savedoffer.salary(),
-                savedoffer.offerUrl());
+    void saveIfOfferUrlIsNotDuplicated(OfferRequestDto offerRequestDto) {
+        Offer offer = mapOfferRequestDtoToOffer(offerRequestDto);
+        List<OfferResponseDto> allUnfiltrateedOffers = offerRepository.findAllOffers();
+
+        try {
+            boolean isUrlDuplicated = offerRepository.isUrlDuplicated(offer.offerUrl());
+            if(!(isUrlDuplicated)) {
+                saveOffer(offerRequestDto);
+             //   Offer savedoffer = offerRepository.save(offer);
+              //  return mapOfferToOfferResponseDto(savedoffer);
+            }else {
+                throw new DuplicateKeyException("Duplicate Key Exception");
+            }
+        } catch (RuntimeException e) {
+            throw new DuplicateKeyException("Duplicate Key Exception");
+        }
     }
+//    boolean isOfferUrlIsNotDuplicated(OfferRequestDto offerRequestDto) {
+//        Offer offer = mapOfferRequestDtoToOffer(offerRequestDto);
+//
+//        boolean isUrlDuplicated = offerRepository.isUrlDuplicated(offer.offerUrl());
+//        if(!(isUrlDuplicated)) {
+//           // saveOffer(offerRequestDto);
+//            return true ;
+//        }else {
+//            throw new DuplicateKeyException("Duplicate Key Exception");
+//        }
+//    }
+
+
+
+    OfferResponseDto saveOffer(OfferRequestDto offerRequestDto) {
+      //  saveIfOfferUrlIsNotDuplicated(offerRequestDto);
+         Offer offer = mapOfferRequestDtoToOffer(offerRequestDto);
+
+
+            Offer savedoffer = offerRepository.save(offer);
+            return mapOfferToOfferResponseDto(savedoffer);
+
+    }
+ List<Offer> filterNotExistingOffers(List<Offer> offers){
+//     List<Offer> offers = fetchAllOffers();
+     return offers.stream()
+             .filter(offer -> !offerRepository.isUrlDuplicated(offer.offerUrl()))
+             .filter(offer -> !offer.offerUrl().isEmpty())
+             .collect(Collectors.toList());
+ }
+
+ List<Offer>  fetchAllOffersAndSaveIfExist(){
+     List<Offer> allOffers = fetchAllOffers();
+     List<Offer> offers = filterNotExistingOffers(allOffers);
+     try {
+         return offerRepository.saveAll(offers);
+     } catch (OfferDuplicateException e) {
+         throw new OfferSavingException(e.getMessage());
+     }
+ }
+
+    List<OfferResponseDto> findAllOffers() {
+      //  List<OfferResponseDto> AllOffersDto = offerRepository.findAllOffers();
+        return offerRepository.findAllOffers();
+    }
+    private List<Offer> fetchAllOffers() {
+        return offerFetchable.fetchAllOffers()
+                .stream()
+                .map(OfferMapper::mapJobOfferResponseToOffer)
+                .collect(Collectors.toList());
+    }
+
 }
