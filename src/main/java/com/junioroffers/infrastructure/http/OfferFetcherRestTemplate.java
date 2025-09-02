@@ -30,41 +30,26 @@ public class OfferFetcherRestTemplate implements OfferFetchable {
 // get to http://ec2-3-127-218-34.eu-central-1.compute.amazonaws.com:5057/offers
     @Override
     public List<JobOfferResponse> fetchAllOffers() {
-        String urlForService = getUrlForService("/offers");
+                log.info("Started fetching offers using http client");
         HttpHeaders headers = new HttpHeaders();
         final HttpEntity<HttpHeaders> requestEntity = new HttpEntity<>(headers);
-        final String url = UriComponentsBuilder.fromHttpUrl(urlForService)
-                .toUriString();
-        ResponseEntity<List<JobOfferResponse>> response = restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                requestEntity,
-                new ParameterizedTypeReference<>() {
-                });
-        List<JobOfferResponse> offers = response.getBody();
-        System.out.println(offers);
-     //   return OfferResponseDto.builder().numbers(numbers.stream().collect(Collectors.toSet())).build();
-        return offers;
-        //        log.info("Started fetching offers using http client");
-//        HttpHeaders headers = new HttpHeaders();
-//        final HttpEntity<HttpHeaders> requestEntity = new HttpEntity<>(headers);
-//        try {
-//            String urlForService = getUrlForService("/offers");
-//            final String url = UriComponentsBuilder.fromHttpUrl(urlForService).toUriString();
-//            ResponseEntity<List<JobOfferResponse>> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity,
-//                    new ParameterizedTypeReference<>() {
-//                    });
-//            final List<JobOfferResponse> body = response.getBody();
-//            if (body == null) {
-//                log.info("Response Body was null returning empty list");
-//                return Collections.emptyList();
-//            }
-//            log.info("Success Response Body Returned: " + body);
-//            return body;
-//        } catch (ResourceAccessException e) {
-//            log.error("Error while fetching offers using http client: " + e.getMessage());
-//            return Collections.emptyList();
-//        }
+        try {
+            String urlForService = getUrlForService("/offers");
+            final String url = UriComponentsBuilder.fromHttpUrl(urlForService).toUriString();
+            ResponseEntity<List<JobOfferResponse>> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity,
+                    new ParameterizedTypeReference<>() {
+                    });
+            final List<JobOfferResponse> body = response.getBody();
+            if (body == null) {
+                log.info("Response Body was null returning empty list");
+                return Collections.emptyList();
+            }
+            log.info("Success Response Body Returned: " + body);
+            return body;
+        } catch (ResourceAccessException e) {
+            log.error("Error while fetching offers using http client: " + e.getMessage());
+            return Collections.emptyList();
+        }
     }
 
     private String getUrlForService(String service) {
