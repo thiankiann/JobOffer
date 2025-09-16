@@ -43,7 +43,7 @@ public class OfferMapper {
                 .build();
     }
 
-    static Offer mapJobOfferResponseToOffer(JobOfferResponse jobOfferResponse) {
+    public static Offer mapJobOfferResponseToOffer(JobOfferResponse jobOfferResponse) {
         return Offer.builder()
                 .companyName(jobOfferResponse.company())
                 .position(jobOfferResponse.title())
