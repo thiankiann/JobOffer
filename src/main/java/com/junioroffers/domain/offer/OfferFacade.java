@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 public class OfferFacade {
 
     private final OfferService offerService;
+    //private final OfferRepository repository;
 
     public List<OfferResponseDto> findAllOffers(){
         return offerService.findAllOffers();

@@ -12,6 +12,7 @@ import static com.junioroffers.domain.offer.OfferMapper.mapOfferRequestDtoToOffe
 import static com.junioroffers.domain.offer.OfferMapper.mapOfferToOfferResponseDto;
 
 @AllArgsConstructor
+
 class OfferService {
     private final OfferRepository offerRepository;
     private final OfferFetchable offerFetchable;
@@ -73,21 +74,21 @@ class OfferService {
  }
 
  List<Offer>  fetchAllOffersAndSaveIfExist(){
-     List<Offer> allOffers = fetchAllOffers();
-     List<Offer> offers = filterNotExistingOffers(allOffers);
+     List<Offer> jobOffers = fetchOffers();
+//        final List<Offer> offers = filterNotExistingOffers(jobOffers);
      try {
-         return offerRepository.saveAll(offers);
-     } catch (OfferDuplicateException e) {
-         throw new OfferSavingException(e.getMessage());
+         return jobOffers;
+//            return offerRepository.saveAll(offers);
+     } catch (OfferDuplicateException duplicateKeyException) {
+         throw new OfferSavingException(duplicateKeyException.getMessage());
      }
  }
-
     List<OfferResponseDto> findAllOffers() {
       //  List<OfferResponseDto> AllOffersDto = offerRepository.findAllOffers();
         return offerRepository.findAllOffers();
     }
-    private List<Offer> fetchAllOffers() {
-        return offerFetchable.fetchAllOffers()
+    private List<Offer> fetchOffers() {
+        return offerFetchable.fetchOffers()
                 .stream()
                 .map(OfferMapper::mapJobOfferResponseToOffer)
                 .collect(Collectors.toList());

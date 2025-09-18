@@ -1,14 +1,46 @@
+#spring:
+#  data:
+#    mongodb:
+#      uri: mongodb://admin:admin@localhost:27017/offers
+#
+#offers:
+#    http:
+#      client:
+#        config:
+#          uri: http://ec2-3-127-218-34.eu-central-1.compute.amazonaws.com
+#          port: 5057
+#
+#          http:
+#            offers:
+#              scheduler:
+#                request:
+#                  delay: 300000 # 5 minut
+##                  delay: PT3H
+#
+#          scheduling:
+#            enabled: true
 spring:
   data:
     mongodb:
       uri: mongodb://admin:admin@localhost:27017/offers
 
-offers:
-    http:
-      client:
-        config:
-          uri: http://ec2-3-127-218-34.eu-central-1.compute.amazonaws.com
-          port: 5057
+offer:
+  http:
+    client:
+      config:
+        connectionTimeout: 1000
+        port: 5057
+        readTimeout: 1000
+        uri: http://ec2-3-120-147-150.eu-central-1.compute.amazonaws.com
+
+http:
+  offers:
+    scheduler:
+      request:
+        delay: PT3H
+
+scheduling:
+  enabled: true
 #offer:
 #  http:
 #    client:

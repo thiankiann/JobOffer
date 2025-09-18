@@ -12,7 +12,7 @@ class InMemoryFetchable implements OfferFetchable{
     }
 
     @Override
-    public List<JobOfferResponse> fetchAllOffers() {
+    public List<JobOfferResponse> fetchOffers() {
         return   listOfOffers;
 //                List.of(
 //                new JobOfferResponse("Tesla","engineer","£200 000","www.tesla.com/offer83698"),

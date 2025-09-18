@@ -1,0 +1,10 @@
+http:
+  offers:
+    scheduler:
+      request:
+        delay: PT1S
+
+#        delay: 1000
+
+scheduling:
+  enabled: false
