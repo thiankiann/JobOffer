@@ -18,6 +18,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+
 @Component
 @AllArgsConstructor
 @Log4j2
@@ -32,7 +33,7 @@ public class HttpOffersScheduler {
     @Scheduled(fixedDelayString = "${http.offers.scheduler.request.delay}")
     public List<OfferResponseDto> fetchAllOffersAndSaveAllIfNotExists(){
         log.info("Started offers fetching {}", dateFormat.format(new Date()));
-        final List<OfferResponseDto> addedOffers = offerFacade.fetchAllOffersAndSaveIfExist();
+        final List<OfferResponseDto> addedOffers = offerFacade.fetchAllOffersAndSaveAllIfNotExists();
         log.info(ADDED_NEW_OFFERS_MESSAGE, addedOffers.size());
         log.info(STOPPED_OFFERS_FETCHING_MESSAGE, dateFormat.format(new Date()));
         return addedOffers;

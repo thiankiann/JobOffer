@@ -11,44 +11,31 @@ import java.util.UUID;
 
 @AllArgsConstructor
 public class OfferMapper {
-
-    public final OfferService offerService;
-
-    public static OfferResponseDto mapOfferToOfferResponseDto(Offer offerById) {
+    public static OfferResponseDto mapFromOfferToOfferDto(Offer offer) {
         return OfferResponseDto.builder()
-                .id(offerById.id())
-                .companyName(offerById.companyName())
-                .position(offerById.position())
-                .salary(offerById.salary())
-                .offerUrl(offerById.offerUrl())
+                .id(offer.id())
+                .companyName(offer.companyName())
+                .position(offer.position())
+                .salary(offer.salary())
+                .offerUrl(offer.offerUrl())
                 .build();
-
     }
-    static Offer mapOfferRequestDtoToOffer(OfferRequestDto offerDto) {
-        final Offer offer = Offer.builder()
+
+    public static Offer mapFromOfferDtoToOffer(OfferRequestDto offerDto) {
+        return Offer.builder()
                 .companyName(offerDto.companyName())
                 .position(offerDto.position())
                 .salary(offerDto.salary())
                 .offerUrl(offerDto.offerUrl())
                 .build();
-        return offer;
     }
 
-    static OfferResponseDto mapJobOfferResponseToOfferResponseDto(JobOfferResponse jobOfferResponse) {
-        return OfferResponseDto.builder()
-                .companyName(jobOfferResponse.company())
-                .position(jobOfferResponse.title())
-                .salary(jobOfferResponse.salary())
-                .offerUrl(jobOfferResponse.offerUrl())
-                .build();
-    }
-
-    public static Offer mapJobOfferResponseToOffer(JobOfferResponse jobOfferResponse) {
+    public static Offer mapFromJobOfferResponseToOffer(JobOfferResponse jobOfferDto) {
         return Offer.builder()
-                .companyName(jobOfferResponse.company())
-                .position(jobOfferResponse.title())
-                .salary(jobOfferResponse.salary())
-                .offerUrl(jobOfferResponse.offerUrl())
+                .offerUrl(jobOfferDto.offerUrl())
+                .salary(jobOfferDto.salary())
+                .position(jobOfferDto.title())
+                .companyName(jobOfferDto.company())
                 .build();
     }
 }

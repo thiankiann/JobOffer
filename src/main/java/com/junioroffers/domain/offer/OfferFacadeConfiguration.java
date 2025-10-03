@@ -11,36 +11,10 @@ import java.util.Optional;
 @Configuration
 public class OfferFacadeConfiguration {
 
+//    private static OfferRepository offerRepository;
     @Bean
-    OfferFacade offerFacade(OfferFetchable offerFetchable) {
-        OfferRepository repo = new OfferRepository() {
-
-            @Override
-            public Optional<Offer> findOfferById(String id) {
-                return Optional.empty();
-            }
-
-            @Override
-            public Offer save(Offer offer) {
-                return null;
-            }
-
-            @Override
-            public List<OfferResponseDto> findAllOffers() {
-                return null;
-            }
-
-            @Override
-            public boolean isUrlDuplicated(String offerUrl) {
-                return false;
-            }
-
-            @Override
-            public List<Offer> saveAll(List<Offer> offers) {
-                return null;
-            }
-        };
-        OfferService offerService = new OfferService(repo,offerFetchable);
-        return new OfferFacade(offerService);//, repo);
+    OfferFacade offerFacade(OfferFetchable offerFetchable, OfferRepository repository) {
+        OfferService offerService = new OfferService(offerFetchable, repository);
+        return new OfferFacade(repository, offerService);
     }
 }
