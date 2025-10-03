@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @EnableScheduling
-@EnableMongoRepositories
+//@EnableMongoRepositories   // no needed as we've done it in HttpOffersSchedulerConfig
 public class JobOffersApplication {
 
     public static void main(String[] args) {
