@@ -5,13 +5,9 @@ import com.junioroffers.domain.offer.dto.OfferRequestDto;
 import com.junioroffers.domain.offer.dto.OfferResponseDto;
 import lombok.AllArgsConstructor;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
 @AllArgsConstructor
 public class OfferMapper {
-    public static OfferResponseDto mapFromOfferToOfferDto(Offer offer) {
+    public static OfferResponseDto mapOfferToOfferResponseDto(Offer offer) {
         return OfferResponseDto.builder()
                 .id(offer.id())
                 .companyName(offer.companyName())
