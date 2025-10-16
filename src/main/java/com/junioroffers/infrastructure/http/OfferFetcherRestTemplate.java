@@ -47,7 +47,8 @@ public class OfferFetcherRestTemplate implements OfferFetchable {
             log.info("Success Response Body Returned: " + body);
             return body;
         } catch (ResourceAccessException e) {
-            log.error("Error while fetching offers using http client: " + e.getMessage());
+            String urlForService = getUrlForService("/offers");
+            log.warn("Could not fetch offers from {} due to I/O issue: {}. Returning empty list.", urlForService, e.getMessage());
             return Collections.emptyList();
         }
     }
