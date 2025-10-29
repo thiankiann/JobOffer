@@ -1,16 +1,20 @@
 package com.junioroffers.features;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.junioroffers.BaseIntegrationTest;
 import com.junioroffers.SampleJobOfferResponse;
 import com.junioroffers.domain.offer.OfferFetchable;
 import com.junioroffers.domain.offer.dto.JobOfferResponse;
+import com.junioroffers.domain.offer.dto.OfferResponseDto;
 import com.junioroffers.infrastructure.scheduler.HttpOffersScheduler;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.Duration;
@@ -57,6 +61,18 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
         assertThat(resultActions.andExpect(status().isOk()));
 //                objectMapper.readValue(mvcResult.getResponse().getContentAsString(), JobOfferResponse.class)).isNotNull();
 
+//        Trainer Version
+        String offersUrl = "/offers";
+        // when
+        ResultActions perform = mockMvc.perform(get(offersUrl)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+        // then
+        MvcResult mvcResult2 = perform.andExpect(status().isOk()).andReturn();
+        String jsonWithOffers = mvcResult2.getResponse().getContentAsString();
+        List<OfferResponseDto> offers = objectMapper.readValue(jsonWithOffers, new TypeReference<>() {
+        });
+        assertThat(offers).isEmpty();
 //    step 8: there are 2 new offers in external HTTP server
 //    step 9: scheduler ran 2nd time and made GET to external server and system added 2 new offers with ids: 1000 and 2000 to database
 //    step 10: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 2 offers with ids: 1000 and 2000
