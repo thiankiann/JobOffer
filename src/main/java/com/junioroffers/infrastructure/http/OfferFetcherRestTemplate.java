@@ -29,7 +29,7 @@ public class OfferFetcherRestTemplate implements OfferFetchable {
     private final int port;
 // get to http://ec2-3-127-218-34.eu-central-1.compute.amazonaws.com:5057/offers
     @Override
-    public List<JobOfferResponse> fetchAllOffers() {
+    public List<JobOfferResponse> fetchOffers() {
                 log.info("Started fetching offers using http client");
         HttpHeaders headers = new HttpHeaders();
         final HttpEntity<HttpHeaders> requestEntity = new HttpEntity<>(headers);
@@ -47,7 +47,8 @@ public class OfferFetcherRestTemplate implements OfferFetchable {
             log.info("Success Response Body Returned: " + body);
             return body;
         } catch (ResourceAccessException e) {
-            log.error("Error while fetching offers using http client: " + e.getMessage());
+            String urlForService = getUrlForService("/offers");
+            log.warn("Could not fetch offers from {} due to I/O issue: {}. Returning empty list.", urlForService, e.getMessage());
             return Collections.emptyList();
         }
     }

@@ -90,6 +90,13 @@
             <version>1.18.22</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>4.2.2</version> <!-- Use the latest appropriate version -->
+            <scope>test</scope> <!-- Awaitility is typically used in tests -->
+        </dependency>
     </dependencies>
 
     <build>

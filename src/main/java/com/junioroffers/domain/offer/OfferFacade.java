@@ -9,28 +9,32 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class OfferFacade {
-
+    private final OfferRepository offerRepository;
     private final OfferService offerService;
 
-    public List<OfferResponseDto> findAllOffers(){
-        return offerService.findAllOffers();
-    }
-    public List<OfferResponseDto> fetchAllOffersAndSaveIfExist(){
-        return offerService.fetchAllOffersAndSaveIfExist().stream()
+    public List<OfferResponseDto> findAllOffers() {
+        return offerRepository.findAll()
+                .stream()
                 .map(OfferMapper::mapOfferToOfferResponseDto)
-                .collect(Collectors.toList());}
-
-    public OfferResponseDto findOfferById(String id){
-        return offerService.findOfferById(id);
+                .collect(Collectors.toList());
     }
 
-    public OfferResponseDto saveOffer(OfferRequestDto offerRequestDto){
-
-        return offerService.saveOffer(offerRequestDto);
+    public List<OfferResponseDto> fetchAllOffersAndSaveAllIfNotExists() {
+        return offerService.fetchAllOffersAndSaveAllIfNotExists()
+                .stream()
+                .map(OfferMapper::mapOfferToOfferResponseDto)
+                .toList();
     }
-    public void saveIfOfferUrlIsNotDuplicated(OfferRequestDto offerRequestDto ){
 
-         offerService.saveIfOfferUrlIsNotDuplicated(offerRequestDto );
-       //  return offerRequestDto;
+    public OfferResponseDto findOfferById(String id) {
+        return offerRepository.findById(id)
+                .map(OfferMapper::mapOfferToOfferResponseDto)
+                .orElseThrow(() -> new OfferNotFoundException(id));
+    }
+
+    public OfferResponseDto saveOffer(OfferRequestDto offerDto) {
+        final Offer offer = OfferMapper.mapFromOfferDtoToOffer(offerDto);
+        final Offer save = offerRepository.save(offer);
+        return OfferMapper.mapOfferToOfferResponseDto(save);
     }
 }
