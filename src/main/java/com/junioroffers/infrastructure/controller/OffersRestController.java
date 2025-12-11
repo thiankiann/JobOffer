@@ -6,20 +6,27 @@ import com.junioroffers.domain.offer.dto.OfferResponseDto;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @AllArgsConstructor
-@RestController
+@RestController("/offers")
 class OffersRestController {
 
     private final OfferFacade offerFacade;
 
-    @GetMapping("/offers")
+    @GetMapping
     public ResponseEntity<List<OfferResponseDto>> findAllOffers(){
         List<OfferResponseDto> allOffers = offerFacade.findAllOffers();
         return ResponseEntity.ok(allOffers);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OfferResponseDto> findOfferById(@PathVariable String id){
+        OfferResponseDto offerById = offerFacade.findOfferById(id);
+        return ResponseEntity.ok(offerById);
     }
 
 }

@@ -80,7 +80,7 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 //    step 11: user made GET /offers/9999 and system returned NOT_FOUND(404) with message “Offer with id 9999 not found”
         // given
         // when
-        ResultActions performGetResultsWithNotExistingId = mockMvc.perform(get("/offers/notExistingId"));
+        ResultActions performGetResultsWithNotExistingId = mockMvc.perform(get("/offers/9999"));
         // then
         performGetResultsWithNotExistingId.andExpect(status().isNotFound())
                 .andExpect(content().json("""
