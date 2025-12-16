@@ -12,7 +12,8 @@ services:
     volumes:
       - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
     ports:
-      - "27017:27017"
+      - "27018:27017"
+#    changed  because of conflicts with myLotto
 
   mongo-express:
     image: mongo-express
