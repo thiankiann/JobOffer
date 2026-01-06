@@ -21,6 +21,7 @@ import java.time.Duration;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -110,11 +111,20 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
                 .contentType(MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
         );
         // then
-      //  String createdOfferJson =
-                performPostOffersWithOneOffer.andExpect(status().isCreated());
-//                .andReturn()
-//                .getResponse()
-//                .getContentAsString();
+        String createdOfferJson = performPostOffersWithOneOffer.andExpect(status().isCreated())
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString();
+
+        OfferResponseDto parsedCreatedOfferJson = objectMapper.readValue(createdOfferJson, OfferResponseDto.class);
+        String id = parsedCreatedOfferJson.id();
+        assertAll(
+                () -> assertThat(parsedCreatedOfferJson.offerUrl()).isEqualTo("https://newoffers.pl/offer/1234"),
+                () -> assertThat(parsedCreatedOfferJson.companyName()).isEqualTo("someCompany"),
+                () -> assertThat(parsedCreatedOfferJson.salary()).isEqualTo("7 000 - 9 000 PLN"),
+                () -> assertThat(parsedCreatedOfferJson.position()).isEqualTo("somePosition"),
+                () -> assertThat(id).isNotNull()
+        );
 //    step 17: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 1 offer
     }
 }
