@@ -19,9 +19,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@AllArgsConstructor
 @RestController
 @RequestMapping("/offers")
+@AllArgsConstructor
 class OffersRestController {
 
     private final OfferFacade offerFacade;

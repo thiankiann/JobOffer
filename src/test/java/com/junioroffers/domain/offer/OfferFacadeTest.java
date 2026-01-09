@@ -119,7 +119,7 @@ public class OfferFacadeTest {
 
         // then
         AssertionsForClassTypes.assertThat(thrown)
-                .isInstanceOf(OfferDuplicateException.class)
+                .isInstanceOf(DuplicateKeyException.class)
                 .hasMessage("Offer with offerUrl [hello.pl] already exists");
     }
 }

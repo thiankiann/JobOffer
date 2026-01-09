@@ -7,20 +7,20 @@ import javax.validation.constraints.NotNull;
 
 @Builder
 public record OfferRequestDto(
-        @NotNull(message = "{inputNumbers.not.null}")
-        @NotEmpty(message = "{inputNumbers.not.empty}")
+        @NotNull(message = "{companyName.not.null}")
+        @NotEmpty(message = "{companyName.not.empty}")
         String companyName,
 
-        @NotNull(message = "{inputNumbers.not.null}")
-        @NotEmpty(message = "{inputNumbers.not.empty}")
+        @NotNull(message = "{position.not.null}")
+        @NotEmpty(message = "{position.not.empty}")
         String position,
 
-        @NotNull(message = "{inputNumbers.not.null}")
-        @NotEmpty(message = "{inputNumbers.not.empty}")
+        @NotNull(message = "{salary.not.null}")
+        @NotEmpty(message = "{salary.not.empty}")
         String salary,
 
-        @NotNull(message = "{inputNumbers.not.null}")
-        @NotEmpty(message = "{inputNumbers.not.empty}")
+        @NotNull(message = "{offerUrl.not.null}")
+        @NotEmpty(message = "{offerUrl.not.empty}")
         String offerUrl
 ) {
 }
