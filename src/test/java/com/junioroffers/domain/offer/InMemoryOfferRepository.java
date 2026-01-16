@@ -40,7 +40,7 @@ public class InMemoryOfferRepository implements OfferRepository {
     @Override
     public <S extends Offer> S save(S entity) {
         if (database.values().stream().anyMatch(offer -> offer.offerUrl().equals(entity.offerUrl()))) {
-            throw new OfferDuplicateException(entity.offerUrl());
+            throw new DuplicateKeyException(entity.offerUrl());
         }
         UUID id = UUID.randomUUID();
         Offer offer = new Offer(
