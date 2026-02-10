@@ -18,18 +18,24 @@ public class OfferClientConfig {
     }
 
     @Bean
-    public RestTemplate restTemplate(RestTemplateResponseErrorHandler restTemplateResponseErrorHandler) {
+    public RestTemplate restTemplate(
+            RestTemplateResponseErrorHandler restTemplateResponseErrorHandler,
+            @Value("${offer.http.client.config.connectionTimeout:${offers.http.client.config.connectionTimeout:5000}}") long connectionTimeout,
+            @Value("${offer.http.client.config.readTimeout:${offers.http.client.config.readTimeout:5000}}") long readTimeout
+    ) {
         return new RestTemplateBuilder()
                 .errorHandler(restTemplateResponseErrorHandler)
-                .setConnectTimeout(Duration.ofMillis(5000))
-                .setReadTimeout(Duration.ofMillis(5000))
+                .setConnectTimeout(Duration.ofMillis(connectionTimeout))
+                .setReadTimeout(Duration.ofMillis(readTimeout))
                 .build();
     }
 
     @Bean
-    public OfferFetchable remoteNumberGeneratorClient(RestTemplate restTemplate,
-                                                      @Value("${offers.http.client.config.uri}") String uri,
-                                                      @Value("${offers.http.client.config.port}") int port) {
+    public OfferFetchable remoteNumberGeneratorClient(
+            RestTemplate restTemplate,
+            @Value("${offer.http.client.config.uri:${offers.http.client.config.uri}}") String uri,
+            @Value("${offer.http.client.config.port:${offers.http.client.config.port}}") int port
+    ) {
         return new OfferFetcherRestTemplate(restTemplate, uri, port);
     }
 }

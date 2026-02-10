@@ -42,11 +42,13 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
                 .willReturn(WireMock.aResponse()
                         .withStatus(HttpStatus.OK.value())
                         .withHeader("Content-Type", "application/json")
-                        .withBody(bodyWithFourOffersJson())));
+                        .withBody(bodyWithZeroOffersJson())));
 
         //step 2: scheduler ran 1st time and made GET to external server and system added 0 offers to database
-        httpOffersScheduler.fetchAllOffersAndSaveAllIfNotExists();
+        List<OfferResponseDto> offerResponseDtos = httpOffersScheduler.fetchAllOffersAndSaveAllIfNotExists();
 
+        assertThat(offerResponseDtos).isEmpty();
+        assertThat(offerResponseDtos).hasSize(0);
 //    step 3: user tried to get JWT token by requesting POST /token with username=someUser, password=somePassword and system returned UNAUTHORIZED(401)
 //    step 4: user made GET /offers with no jwt token and system returned UNAUTHORIZED(401)
 //    step 5: user made POST /register with username=someUser, password=somePassword and system registered user with status OK(200)
@@ -76,8 +78,20 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
         List<OfferResponseDto> offers = objectMapper.readValue(jsonWithOffers, new TypeReference<>() {
         });
         assertThat(offers).isEmpty();
-//    step 8: there are 2 new offers in external HTTP server
+
+
+        //step 8: there are 2 new offers in external HTTP server
+        // given && when && then
+        wireMockServer.stubFor(WireMock.get("/offers")
+                .willReturn(WireMock.aResponse()
+                        .withStatus(HttpStatus.OK.value())
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(bodyWithTwoOffersJson())));
+
+
 //    step 9: scheduler ran 2nd time and made GET to external server and system added 2 new offers with ids: 1000 and 2000 to database
+        List<OfferResponseDto> offerResponseDtos2 = httpOffersScheduler.fetchAllOffersAndSaveAllIfNotExists();
+        assertThat(offerResponseDtos2).hasSize(2);
 //    step 10: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 2 offers with ids: 1000 and 2000
 //    step 11: user made GET /offers/9999 and system returned NOT_FOUND(404) with message “Offer with id 9999 not found”
         // given
