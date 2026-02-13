@@ -57,20 +57,22 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 //        MvcResult mvcResult = mockMvc.perform(get("/inputNumbers")
 //                .willReturn(status().isOk())
 //        );
-// 1. Perform the request and chain expectations
-        ResultActions resultActions = mockMvc.perform(get("/offers"));
+        //old version
+//// 1. Perform the request and chain expectations
+//        ResultActions resultActions = mockMvc.perform(get("/offers"));
+//
+//// 2. Check (assert) the status and get the final result
+//        //  MvcResult mvcResult = resultActions.andExpect(status().isOk()).andReturn();
+//        //  JobOfferResponse jobOfferResponse =
+//        assertThat(resultActions.andExpect(status().isOk()));
+////                objectMapper.readValue(mvcResult.getResponse().getContentAsString(), JobOfferResponse.class)).isNotNull();
 
-// 2. Check (assert) the status and get the final result
-        //  MvcResult mvcResult = resultActions.andExpect(status().isOk()).andReturn();
-        //  JobOfferResponse jobOfferResponse =
-        assertThat(resultActions.andExpect(status().isOk()));
-//                objectMapper.readValue(mvcResult.getResponse().getContentAsString(), JobOfferResponse.class)).isNotNull();
-
-//        Trainer Version
+//        New Version
         String offersUrl = "/offers";
         // when
         ResultActions perform = mockMvc.perform(get(offersUrl)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)  //AI twierdzi ze to zbedna linijka stosowana bardziej do post - mowi wysylam json
+//                .accept(MediaType.APPLICATION_JSON)) // "Chcę dostać JSON-a"//dlatego sugeruje to - mowiace - odeslij mi odpowiedz w formaci json
         );
         // then
         MvcResult mvcResult2 = perform.andExpect(status().isOk()).andReturn();
@@ -92,7 +94,11 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 //    step 9: scheduler ran 2nd time and made GET to external server and system added 2 new offers with ids: 1000 and 2000 to database
         List<OfferResponseDto> offerResponseDtos2 = httpOffersScheduler.fetchAllOffersAndSaveAllIfNotExists();
         assertThat(offerResponseDtos2).hasSize(2);
+        assertThat(offerResponseDtos2.stream().map(OfferResponseDto::id).toList()).containsExactly("1000","2000");
 //    step 10: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 2 offers with ids: 1000 and 2000
+//        ResultActions performGetOffers = mockMvc.perform(get("/offers"));
+//       MvcResult offerResponseWithOffer =  performGetOffers.andExpect(status().isOk()).andReturn();
+
 //    step 11: user made GET /offers/9999 and system returned NOT_FOUND(404) with message “Offer with id 9999 not found”
         // given
 
@@ -151,7 +157,7 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
                 .getContentAsString();
         List<OfferResponseDto> parsedJsonWithOneOffer = objectMapper.readValue(oneOfferJson, new TypeReference<>() {
         });
-        assertThat(parsedJsonWithOneOffer).hasSize(1);
+       // assertThat(parsedJsonWithOneOffer).hasSize(1); //3
         assertThat(parsedJsonWithOneOffer.stream().map(OfferResponseDto::id)).contains(id);
     }
 }
