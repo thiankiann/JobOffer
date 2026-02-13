@@ -96,8 +96,17 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
         assertThat(offerResponseDtos2).hasSize(2);
         assertThat(offerResponseDtos2.stream().map(OfferResponseDto::id).toList()).containsExactly("1000","2000");
 //    step 10: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 2 offers with ids: 1000 and 2000
-//        ResultActions performGetOffers = mockMvc.perform(get("/offers"));
-//       MvcResult offerResponseWithOffer =  performGetOffers.andExpect(status().isOk()).andReturn();
+        ResultActions performGetTwoOffers = mockMvc.perform(get("/offers"));
+        MvcResult result= performGetTwoOffers.andExpect(status().isOk()).andReturn();
+        String jSon = result.getResponse().getContentAsString();
+        List<OfferResponseDto> twoOffers = objectMapper.readValue(jSon, new TypeReference<>() {});
+        assertThat(twoOffers).hasSize(2);
+        OfferResponseDto expectedFirstOffer = twoOffers.get(0);
+        OfferResponseDto expectedSecondOffer = twoOffers.get(1);
+        assertThat(twoOffers).containsExactlyInAnyOrder(
+                new OfferResponseDto(expectedFirstOffer.id(), expectedFirstOffer.companyName(), expectedFirstOffer.position(), expectedFirstOffer.salary(), expectedFirstOffer.offerUrl()),
+                new OfferResponseDto(expectedSecondOffer.id(), expectedSecondOffer.companyName(), expectedSecondOffer.position(), expectedSecondOffer.salary(), expectedSecondOffer.offerUrl())
+        );
 
 //    step 11: user made GET /offers/9999 and system returned NOT_FOUND(404) with message “Offer with id 9999 not found”
         // given
