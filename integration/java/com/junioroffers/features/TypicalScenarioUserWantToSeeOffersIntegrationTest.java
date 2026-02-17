@@ -44,6 +44,8 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
                         .withHeader("Content-Type", "application/json")
                         .withBody(bodyWithZeroOffersJson())));
 
+        //maybe I should add assertion with get to mocked server??
+
         //step 2: scheduler ran 1st time and made GET to external server and system added 0 offers to database
         List<OfferResponseDto> offerResponseDtos = httpOffersScheduler.fetchAllOffersAndSaveAllIfNotExists();
 
@@ -95,6 +97,7 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
         List<OfferResponseDto> offerResponseDtos2 = httpOffersScheduler.fetchAllOffersAndSaveAllIfNotExists();
         assertThat(offerResponseDtos2).hasSize(2);
         assertThat(offerResponseDtos2.stream().map(OfferResponseDto::id).toList()).containsExactly("1000","2000");
+
 //    step 10: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 2 offers with ids: 1000 and 2000
         ResultActions performGetTwoOffers = mockMvc.perform(get("/offers"));
         MvcResult result= performGetTwoOffers.andExpect(status().isOk()).andReturn();
@@ -166,7 +169,7 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
                 .getContentAsString();
         List<OfferResponseDto> parsedJsonWithOneOffer = objectMapper.readValue(oneOfferJson, new TypeReference<>() {
         });
-       // assertThat(parsedJsonWithOneOffer).hasSize(1); //3
+        assertThat(parsedJsonWithOneOffer).hasSize(3);
         assertThat(parsedJsonWithOneOffer.stream().map(OfferResponseDto::id)).contains(id);
     }
 }
