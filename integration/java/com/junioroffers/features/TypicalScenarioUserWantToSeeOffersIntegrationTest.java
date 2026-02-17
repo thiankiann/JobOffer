@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -70,15 +71,16 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 ////                objectMapper.readValue(mvcResult.getResponse().getContentAsString(), JobOfferResponse.class)).isNotNull();
 
 //        New Version
-        String offersUrl = "/offers";
         // when
-        ResultActions perform = mockMvc.perform(get(offersUrl)
+        ResultActions perform = mockMvc.perform(get("/offers")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)  //AI twierdzi ze to zbedna linijka stosowana bardziej do post - mowi wysylam json
 //                .accept(MediaType.APPLICATION_JSON)) // "Chcę dostać JSON-a"//dlatego sugeruje to - mowiace - odeslij mi odpowiedz w formaci json
         );
         // then
-        MvcResult mvcResult2 = perform.andExpect(status().isOk()).andReturn();
-        String jsonWithOffers = mvcResult2.getResponse().getContentAsString();
+        MvcResult mvcResult = perform.andExpect(status()
+                .isOk())
+                .andReturn();
+        String jsonWithOffers = mvcResult.getResponse().getContentAsString();
         List<OfferResponseDto> offers = objectMapper.readValue(jsonWithOffers, new TypeReference<>() {
         });
         assertThat(offers).isEmpty();
@@ -96,8 +98,11 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 //    step 9: scheduler ran 2nd time and made GET to external server and system added 2 new offers with ids: 1000 and 2000 to database
         List<OfferResponseDto> offerResponseDtos2 = httpOffersScheduler.fetchAllOffersAndSaveAllIfNotExists();
         assertThat(offerResponseDtos2).hasSize(2);
-        assertThat(offerResponseDtos2.stream().map(OfferResponseDto::id).toList()).containsExactly("1000","2000");
-
+//        assertThat(offerResponseDtos2.stream().map(OfferResponseDto::id).toList()).containsExactly("1000","2000");
+       assertThat( offerResponseDtos2.stream()
+                .map( (OfferResponseDto offer) -> offer.id())
+                .collect(Collectors.toList()))
+               .containsExactly("1000","2000");
 //    step 10: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 2 offers with ids: 1000 and 2000
         ResultActions performGetTwoOffers = mockMvc.perform(get("/offers"));
         MvcResult result= performGetTwoOffers.andExpect(status().isOk()).andReturn();
