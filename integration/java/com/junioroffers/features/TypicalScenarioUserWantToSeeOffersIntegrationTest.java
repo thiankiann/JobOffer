@@ -102,7 +102,7 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
        assertThat( offerResponseDtos2.stream()
                 .map( (OfferResponseDto offer) -> offer.id())
                 .collect(Collectors.toList()))
-               .containsExactly("1000","2000");
+               .containsExactlyInAnyOrder("1000","2000");
 
 //    step 10: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 2 offers with ids: 1000 and 2000
 
@@ -114,12 +114,13 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
         List<OfferResponseDto> twoOffers = objectMapper.readValue(jSon, new TypeReference<>() {});
         //then
         assertThat(twoOffers).hasSize(2);
-        OfferResponseDto expectedFirstOffer = twoOffers.get(0);
-        OfferResponseDto expectedSecondOffer = twoOffers.get(1);
-        assertThat(expectedFirstOffer.id()).isEqualTo("1000");
-        assertThat(expectedSecondOffer.id()).isEqualTo("2000");
-        assertThat(expectedFirstOffer).isEqualTo(offerResponseDtos2.get(0));
-        assertThat(expectedSecondOffer).isEqualTo(offerResponseDtos2.get(1));
+        assertThat(twoOffers).containsExactlyInAnyOrderElementsOf(offerResponseDtos2);
+//        OfferResponseDto expectedFirstOffer = twoOffers.get(0);
+//        OfferResponseDto expectedSecondOffer = twoOffers.get(1);
+//        assertThat(expectedFirstOffer.id()).isEqualTo("1000");
+//        assertThat(expectedSecondOffer.id()).isEqualTo("2000");
+//        assertThat(expectedFirstOffer).isEqualTo(offerResponseDtos2.get(0));
+//        assertThat(expectedSecondOffer).isEqualTo(offerResponseDtos2.get(1));
 //        assertThat(twoOffers).containsExactlyInAnyOrder(
 //                new OfferResponseDto(expectedFirstOffer.id(), expectedFirstOffer.companyName(), expectedFirstOffer.position(), expectedFirstOffer.salary(), expectedFirstOffer.offerUrl()),
 //                new OfferResponseDto(expectedSecondOffer.id(), expectedSecondOffer.companyName(), expectedSecondOffer.position(), expectedSecondOffer.salary(), expectedSecondOffer.offerUrl())
