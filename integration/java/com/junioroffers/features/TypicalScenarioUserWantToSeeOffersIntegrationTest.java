@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.junioroffers.BaseIntegrationTest;
 import com.junioroffers.SampleJobOfferResponse;
 import com.junioroffers.domain.offer.OfferFetchable;
+import com.junioroffers.domain.offer.OfferRepository;
 import com.junioroffers.domain.offer.dto.JobOfferResponse;
 import com.junioroffers.domain.offer.dto.OfferResponseDto;
 import com.junioroffers.infrastructure.scheduler.HttpOffersScheduler;
@@ -35,6 +36,7 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 
     @Autowired
     HttpOffersScheduler httpOffersScheduler;
+    private OfferRepository offerRepository;
 
     @Test
     public void user_want_to_see_offers_but_have_to_be_logged_in_and_external_server_should_have_some_offers() throws Exception {
@@ -115,16 +117,6 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
         //then
         assertThat(twoOffers).hasSize(2);
         assertThat(twoOffers).containsExactlyInAnyOrderElementsOf(offerResponseDtos2);
-//        OfferResponseDto expectedFirstOffer = twoOffers.get(0);
-//        OfferResponseDto expectedSecondOffer = twoOffers.get(1);
-//        assertThat(expectedFirstOffer.id()).isEqualTo("1000");
-//        assertThat(expectedSecondOffer.id()).isEqualTo("2000");
-//        assertThat(expectedFirstOffer).isEqualTo(offerResponseDtos2.get(0));
-//        assertThat(expectedSecondOffer).isEqualTo(offerResponseDtos2.get(1));
-//        assertThat(twoOffers).containsExactlyInAnyOrder(
-//                new OfferResponseDto(expectedFirstOffer.id(), expectedFirstOffer.companyName(), expectedFirstOffer.position(), expectedFirstOffer.salary(), expectedFirstOffer.offerUrl()),
-//                new OfferResponseDto(expectedSecondOffer.id(), expectedSecondOffer.companyName(), expectedSecondOffer.position(), expectedSecondOffer.salary(), expectedSecondOffer.offerUrl())
-//        );
 
 //    step 11: user made GET /offers/9999 and system returned NOT_FOUND(404) with message “Offer with id 9999 not found”
         // given
@@ -140,6 +132,17 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
                         """.trim()));
 
 //    step 12: user made GET /offers/1000 and system returned OK(200) with offer
+
+        //given
+        ResultActions performGetOffersWithId1000 = mockMvc.perform(get("/offers/1000"));
+        //then
+        MvcResult offerWithId1000= performGetOffersWithId1000.andExpect(status().isOk()).andReturn();
+        String offerJson = offerWithId1000.getResponse().getContentAsString();
+        OfferResponseDto offerId1000 = objectMapper.readValue(offerJson, OfferResponseDto.class);
+
+        //then
+        assertThat(offerId1000.id()).isEqualTo("1000");
+
 //    step 13: there are 2 new offers in external HTTP server
 //    step 14: scheduler ran 3rd time and made GET to external server and system added 2 new offers with ids: 3000 and 4000 to database
 //    step 15: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 4 offers with ids: 1000,2000, 3000 and 4000
