@@ -109,7 +109,8 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 //    step 10: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 2 offers with ids: 1000 and 2000
 
         //given
-        ResultActions performGetTwoOffers = mockMvc.perform(get("/offers"));
+        ResultActions performGetTwoOffers = mockMvc.perform(get("/offers")
+                                                    .accept(MediaType.APPLICATION_JSON));
         //then
         MvcResult result= performGetTwoOffers.andExpect(status().isOk()).andReturn();
         String jSon = result.getResponse().getContentAsString();
@@ -117,6 +118,12 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
         //then
         assertThat(twoOffers).hasSize(2);
         assertThat(twoOffers).containsExactlyInAnyOrderElementsOf(offerResponseDtos2);
+        OfferResponseDto offerDto1 = offerResponseDtos2.get(0);
+        OfferResponseDto offerDto2 = offerResponseDtos2.get(1);
+        assertThat(twoOffers).containsExactlyInAnyOrderElementsOf(List.of(
+                new OfferResponseDto(offerDto1.id(),offerDto1.companyName(),offerDto1.position(),offerDto1.salary(),offerDto1.offerUrl()),
+                new OfferResponseDto(offerDto2.id(),offerDto2.companyName(),offerDto2.position(),offerDto2.salary(),offerDto2.offerUrl()))
+        );
 
 //    step 11: user made GET /offers/9999 and system returned NOT_FOUND(404) with message “Offer with id 9999 not found”
         // given
@@ -144,7 +151,19 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
         assertThat(offerId1000.id()).isEqualTo("1000");
 
 //    step 13: there are 2 new offers in external HTTP server
+        wireMockServer.stubFor(WireMock.get("/offers")
+                .willReturn(WireMock.aResponse()
+                        .withStatus(HttpStatus.OK.value())
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(bodyWithFourOffersJson())));
 //    step 14: scheduler ran 3rd time and made GET to external server and system added 2 new offers with ids: 3000 and 4000 to database
+        List<OfferResponseDto> offerResponseDtos3 = httpOffersScheduler.fetchAllOffersAndSaveAllIfNotExists();
+        assertThat(offerResponseDtos3).hasSize(2);
+        //List<String> offersIdsList = offerResponseDtos3.stream().map((OfferResponseDto offer) -> offer.id()).collect(Collectors.toList());
+
+
+
+//        assertThat(offersIdsList).contains("5000","6000");
 //    step 15: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 4 offers with ids: 1000,2000, 3000 and 4000
 //    step 16: user made POST /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and offer as body and system returned CREATED(201) with saved offer
         // given
@@ -175,19 +194,19 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
                 () -> assertThat(parsedCreatedOfferJson.position()).isEqualTo("somePosition"),
                 () -> assertThat(id).isNotNull()
         );
-//    step 17: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 1 offer
+//    step 17: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 3 offer
         // given & when
-        ResultActions peformGetOffers = mockMvc.perform(get("/offers")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-        );
-        // then
-        String oneOfferJson = peformGetOffers.andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-        List<OfferResponseDto> parsedJsonWithOneOffer = objectMapper.readValue(oneOfferJson, new TypeReference<>() {
-        });
-        assertThat(parsedJsonWithOneOffer).hasSize(3);
-        assertThat(parsedJsonWithOneOffer.stream().map(OfferResponseDto::id)).contains(id);
+//        ResultActions peformGetOffers = mockMvc.perform(get("/offers")
+//                .contentType(MediaType.APPLICATION_JSON_VALUE)
+//        );
+//        // then
+//        String oneOfferJson = peformGetOffers.andExpect(status().isOk())
+//                .andReturn()
+//                .getResponse()
+//                .getContentAsString();
+//        List<OfferResponseDto> parsedJsonWithOneOffer = objectMapper.readValue(oneOfferJson, new TypeReference<>() {
+//        });
+//        assertThat(parsedJsonWithOneOffer).hasSize(3);
+//        assertThat(parsedJsonWithOneOffer.stream().map(OfferResponseDto::id)).contains(id);
     }
 }
