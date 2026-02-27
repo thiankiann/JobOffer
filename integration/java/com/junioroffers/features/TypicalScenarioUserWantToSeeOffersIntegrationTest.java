@@ -158,13 +158,17 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 
         //given
         ResultActions performGetOffersWithId1000 = mockMvc.perform(get("/offers/1000"));
-        //then
-        MvcResult offerWithId1000= performGetOffersWithId1000.andExpect(status().isOk()).andReturn();
-        String offerJson = offerWithId1000.getResponse().getContentAsString();
-        OfferResponseDto offerId1000 = objectMapper.readValue(offerJson, OfferResponseDto.class);
+        //when
+
+        String offerId1000Json = performGetOffersWithId1000.andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        OfferResponseDto offerResponseDtoId1000 = objectMapper.readValue(offerId1000Json, OfferResponseDto.class);
 
         //then
-        assertThat(offerId1000.id()).isEqualTo("1000");
+        assertThat(offerResponseDtoId1000.id()).isEqualTo("1000");
+        assertThat(offerResponseDtoId1000).isEqualTo(offerDto1);
 
 //    step 13: there are 2 new offers in external HTTP server
         wireMockServer.stubFor(WireMock.get("/offers")
@@ -172,6 +176,7 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
                         .withStatus(HttpStatus.OK.value())
                         .withHeader("Content-Type", "application/json")
                         .withBody(bodyWithFourOffersJson())));
+
 //    step 14: scheduler ran 3rd time and made GET to external server and system added 2 new offers with ids: 3000 and 4000 to database
         List<OfferResponseDto> offerResponseDtos3 = httpOffersScheduler.fetchAllOffersAndSaveAllIfNotExists();
         assertThat(offerResponseDtos3).hasSize(2);
@@ -181,6 +186,22 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 
 //        assertThat(offersIdsList).contains("5000","6000");
 //    step 15: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 4 offers with ids: 1000,2000, 3000 and 4000
+        //given
+        ResultActions performGetFourOffers = mockMvc.perform(get("/offers")
+                .accept(MediaType.APPLICATION_JSON));
+        //then
+
+        String fourOffersJson = performGetFourOffers.andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        List<OfferResponseDto> fourOffers = objectMapper.readValue(fourOffersJson, new TypeReference<>() {});
+        //then
+        assertThat(fourOffers).hasSize(4);
+        OfferResponseDto offerDto3 = offerResponseDtos3.get(0);
+        OfferResponseDto offerDto4 = offerResponseDtos3.get(1);
+        assertThat(fourOffers).contains(
+                new OfferResponseDto(offerDto3.id(),offerDto3.companyName(),offerDto3.position(),offerDto3.salary(),offerDto3.offerUrl()),
+                new OfferResponseDto(offerDto4.id(),offerDto4.companyName(),offerDto4.position(),offerDto4.salary(),offerDto4.offerUrl()));
+
 //    step 16: user made POST /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and offer as body and system returned CREATED(201) with saved offer
         // given
         // when
