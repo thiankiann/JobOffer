@@ -10,9 +10,11 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Collections;
@@ -48,8 +50,9 @@ public class OfferFetcherRestTemplate implements OfferFetchable {
             return body;
         } catch (ResourceAccessException e) {
             String urlForService = getUrlForService("/offers");
-            log.warn("Could not fetch offers from {} due to I/O issue: {}. Returning empty list.", urlForService, e.getMessage());
-            return Collections.emptyList();
+            log.warn("Could not fetch offers from {} due to I/O issue: {}.", urlForService, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+//            return Collections.emptyList();
         }
     }
 
