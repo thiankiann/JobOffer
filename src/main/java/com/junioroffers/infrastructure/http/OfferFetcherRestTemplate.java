@@ -30,6 +30,7 @@ public class OfferFetcherRestTemplate implements OfferFetchable {
     private final String uri;
     private final int port;
 // get to http://ec2-3-127-218-34.eu-central-1.compute.amazonaws.com:5057/offers
+// NEW get to http://ec2-18-194-181-208.eu-central-1.compute.amazonaws.com:5057/offers
     @Override
     public List<JobOfferResponse> fetchOffers() {
                 log.info("Started fetching offers using http client");
@@ -52,7 +53,6 @@ public class OfferFetcherRestTemplate implements OfferFetchable {
             String urlForService = getUrlForService("/offers");
             log.warn("Could not fetch offers from {} due to I/O issue: {}.", urlForService, e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-//            return Collections.emptyList();
         }
     }
 
