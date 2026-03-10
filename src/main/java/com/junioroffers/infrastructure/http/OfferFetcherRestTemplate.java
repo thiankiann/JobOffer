@@ -44,8 +44,9 @@ public class OfferFetcherRestTemplate implements OfferFetchable {
                     });
             final List<JobOfferResponse> body = response.getBody();
             if (body == null) {
-                log.info("Response Body was null returning empty list");
-                return Collections.emptyList();
+                log.error("Response Body was null");
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+              //  return Collections.emptyList();
             }
             log.info("Success Response Body Returned: " + body);
             return body;
