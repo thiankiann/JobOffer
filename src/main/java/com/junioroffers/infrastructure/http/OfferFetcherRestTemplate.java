@@ -46,7 +46,6 @@ public class OfferFetcherRestTemplate implements OfferFetchable {
             if (body == null) {
                 log.error("Response Body was null");
                 throw new ResponseStatusException(HttpStatus.NO_CONTENT);
-              //  return Collections.emptyList();
             }
             log.info("Success Response Body Returned: " + body);
             return body;

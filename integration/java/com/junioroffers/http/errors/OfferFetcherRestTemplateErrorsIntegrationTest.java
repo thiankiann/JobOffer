@@ -4,6 +4,7 @@ import com.github.dockerjava.zerodep.shaded.org.apache.hc.core5.http.HttpStatus;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.http.Fault;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
+import com.junioroffers.SampleJobOfferResponse;
 import com.junioroffers.domain.offer.OfferFetchable;
 import com.junioroffers.domain.offer.dto.JobOfferResponse;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
-class OfferFetcherRestTemplateErrorsIntegrationTest {
+class OfferFetcherRestTemplateErrorsIntegrationTest implements SampleJobOfferResponse {
 
 
 
@@ -31,7 +32,7 @@ class OfferFetcherRestTemplateErrorsIntegrationTest {
             .remoteOfferClient(wireMockServer.getPort(),1000, 1000);
 
     @Test
-    void should_return_null_numbers_when_fault_connection_reset_by_peer() {
+    void should_throw_exception_500_when_fault_connection_reset_by_peer() {
         // given
         wireMockServer.stubFor(WireMock.get("/offers")
                 .willReturn(WireMock.aResponse()
@@ -47,7 +48,7 @@ class OfferFetcherRestTemplateErrorsIntegrationTest {
         assertThat(throwable.getMessage()).isEqualTo("500 INTERNAL_SERVER_ERROR");
     }
     @Test
-    void should_return_null_numbers_when_fault_empty_response() {
+    void should_throw_exception_500_when_fault_empty_response() {
         // given
         wireMockServer.stubFor(WireMock.get("/offers")
                 .willReturn(WireMock.aResponse()
@@ -63,7 +64,7 @@ class OfferFetcherRestTemplateErrorsIntegrationTest {
         assertThat(throwable.getMessage()).isEqualTo("500 INTERNAL_SERVER_ERROR");
     }
     @Test
-    void should_return_null_numbers_when_fault_malformed_response_chunk() {
+    void should_throw_exception_500_when_fault_malformed_response_chunk() {
         // given
         wireMockServer.stubFor(WireMock.get("/offers")
                 .willReturn(WireMock.aResponse()
@@ -79,7 +80,7 @@ class OfferFetcherRestTemplateErrorsIntegrationTest {
     }
 
     @Test
-    void should_return_null_numbers_when_fault_random_data_then_close() {
+    void should_throw_exception_500_when_fault_random_data_then_close() {
         // given
         wireMockServer.stubFor(WireMock.get("/offers")
                 .willReturn(WireMock.aResponse()
@@ -95,7 +96,7 @@ class OfferFetcherRestTemplateErrorsIntegrationTest {
     }
 
     @Test
-    void should_return_zero_job_offers_when_status_is_204_no_content() {
+    void should_throw_exception_204_when_status_is_204_no_content() {
         // given
         wireMockServer.stubFor(WireMock.get("/offers")
                 .willReturn(WireMock.aResponse()
@@ -115,15 +116,13 @@ class OfferFetcherRestTemplateErrorsIntegrationTest {
     }
 
     @Test
-    void should_return_zero_job_offers_when_response_delay_is_5000_ms_and_client_has_1000ms_read_timeout() {
+    void should_throw_exception_when_response_delay_is_5000_ms_and_client_has_1000ms_read_timeout() {
         // given
         wireMockServer.stubFor(WireMock.get("/offers")
                 .willReturn(WireMock.aResponse()
                         .withStatus(HttpStatus.SC_OK)
                         .withHeader("Content-Type", "application/json")
-                        .withBody("""
-                                [1, 2, 3, 4, 5, 6, 82, 82, 83, 83, 86, 57, 10, 81, 53, 93, 50, 54, 31, 88, 15, 43, 79, 32, 43]
-                                          """.trim()
+                        .withBody(bodyWithTwoOffersJson()
                         )
                         .withFixedDelay(5000)));
 
@@ -135,7 +134,7 @@ class OfferFetcherRestTemplateErrorsIntegrationTest {
         assertThat(throwable.getMessage()).isEqualTo("500 INTERNAL_SERVER_ERROR");
     }
     @Test
-    void should_return_response_not_found_status_exception_when_http_service_returning_not_found_status() {
+    void should_throw_exception_not_found_status_exception_when_http_service_returning_not_found_status() {
         // given
         wireMockServer.stubFor(WireMock.get("/offers")
                 .willReturn(WireMock.aResponse()
@@ -152,7 +151,7 @@ class OfferFetcherRestTemplateErrorsIntegrationTest {
     }
 
     @Test
-    void should_return_response_unauthorized_status_exception_when_http_service_returning_unauthorized_status() {
+    void should_throw_exception_response_unauthorized_status_exception_when_http_service_returning_unauthorized_status() {
         // given
         wireMockServer.stubFor(WireMock.get("/offers")
                 .willReturn(WireMock.aResponse()
