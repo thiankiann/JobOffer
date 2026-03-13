@@ -42,9 +42,5 @@ class OffersRestController {
         OfferResponseDto offerResponseDto = offerFacade.saveOffer(offerDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(offerResponseDto);
     }
-    //    @PostMapping  //wrong
-//    public ResponseEntity<OfferResponseDto> inputNumbers(@RequestBody @Valid OfferRequestDto requestDto) {
-//        OfferResponseDto offerResponseDto = offerFacade.saveOffer(requestDto);
-//        return ResponseEntity.ok(offerResponseDto); // here is mistake - 200 (ok) instead 201 (created)
-//    }
+
 }

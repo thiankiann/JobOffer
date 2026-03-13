@@ -31,7 +31,7 @@ public class OfferClientConfig {
     }
 
     @Bean
-    public OfferFetchable remoteNumberGeneratorClient(
+    public OfferFetchable remoteOfferClient(
             RestTemplate restTemplate,
             @Value("${offer.http.client.config.uri:${offers.http.client.config.uri}}") String uri,
             @Value("${offer.http.client.config.port:${offers.http.client.config.port}}") int port
