@@ -91,49 +91,72 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
                         """.trim()));
 
 
-//    step 4: user made GET /offers with no jwt token and system returned UNAUTHORIZED(401)
+//    step 4: user made GET /offers with no jwt token and system returned FORBIDDEN(403)
         // given & when
         ResultActions failedGetRequest = mockMvc.perform(get("/offers")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
         // then
-        failedLoginRequest
-                .andExpect(status().isUnauthorized())
-                .andExpect(content().json("""
-                        {
-                          "message": "Bad Credentials",
-                          "status": "UNAUTHORIZED"
-                        }
-                        """.trim()));
+        failedGetRequest
+                .andExpect(status().isForbidden());
 
 
-//    step 5: user made POST /register with username=someUser, password=somePassword and system registered user with status OK(200)
-//    step 6: user tried to get JWT token by requesting POST /token with username=someUser, password=somePassword and system returned OK(200) and jwttoken=AAAA.BBBB.CCC
-//    step 7: user made GET /offers (-not yet-with header “Authorization: Bearer AAAA.BBBB.CCC”) and system returned OK(200) with 0 offers
-//        // given&when
-//        ResultActions perform = mockMvc.perform(get("/offers")
-//                .contentType(MediaType.APPLICATION_JSON_VALUE)  //AI twierdzi ze to zbedna linijka stosowana bardziej do post - mowi wysylam json
-////                .accept(MediaType.APPLICATION_JSON)) // "Chcę dostać JSON-a"//dlatego sugeruje to - mowiace - odeslij mi odpowiedz w formaci json
+////    step 5: user made POST /register with username=someUser, password=somePassword and system registered user with status OK(200)
+//        // given & when
+//        ResultActions registerRequest = mockMvc.perform(post("/register")
+//                .content("""
+//                        {
+//                        "username": "someUser",
+//                        "password": "somePassword"
+//                        }
+//                        """.trim())
+//                .contentType(MediaType.APPLICATION_JSON_VALUE)
 //        );
 //        // then
-//        MvcResult mvcResult = perform.andExpect(status()
-//                .isOk())
-//                .andReturn();
+//        registerRequest.andExpect(status().isCreated());
+//
+////    step 6: user tried to get JWT token by requesting POST /token with username=someUser, password=somePassword and system returned OK(200) and jwttoken=AAAA.BBBB.CCC
+//        // given & when
+//        ResultActions loginRequest = mockMvc.perform(post("/token")
+//                .content("""
+//                        {
+//                        "username": "someUser",
+//                        "password": "somePassword"
+//                        }
+//                        """.trim())
+//                .contentType(MediaType.APPLICATION_JSON_VALUE)
+//        );
+//        // then
+//        MvcResult loginResult = loginRequest.andExpect(status().isOk()).andReturn();
+//        String loginResponseJson = loginResult.getResponse().getContentAsString();
+//        com.junioroffers.infrastructure.loginandregister.controller.dto.JwtResponseDto jwtResponse = objectMapper.readValue(loginResponseJson, com.junioroffers.infrastructure.loginandregister.controller.dto.JwtResponseDto.class);
+//        String token = jwtResponse.token();
+//        assertThat(token).isNotNull();
+//
+//
+////    step 7: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 0 offers
+//        // when
+//        ResultActions perform = mockMvc.perform(get("/offers")
+//                .header("Authorization", "Bearer " + token)
+//                .contentType(MediaType.APPLICATION_JSON_VALUE)
+//        );
+//        // then
+//        MvcResult mvcResult = perform.andExpect(status().isOk()).andReturn();
 //        String jsonWithOffers = mvcResult.getResponse().getContentAsString();
 //        List<OfferResponseDto> offers = objectMapper.readValue(jsonWithOffers, new TypeReference<>() {
 //        });
 //        assertThat(offers).isEmpty();
-
-
-        //step 8: there are 2 new offers in external HTTP server
-        // given && when && then
+//
+//
+//        //step 8: there are 2 new offers in external HTTP server
+//        // given && when && then
 //        wireMockServer.stubFor(WireMock.get("/offers")
 //                .willReturn(WireMock.aResponse()
 //                        .withStatus(HttpStatus.OK.value())
 //                        .withHeader("Content-Type", "application/json")
 //                        .withBody(bodyWithTwoOffersJson())));
-
-
+//
+//
 ////    step 9: scheduler ran 2nd time and made GET to external server and system added 2 new offers with ids: 1000 and 2000 to database
 //        List<OfferResponseDto> offerResponseDtos2 = httpOffersScheduler.fetchAllOffersAndSaveAllIfNotExists();
 //        assertThat(offerResponseDtos2).hasSize(2);
@@ -142,12 +165,13 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 //                .map( (OfferResponseDto offer) -> offer.id())
 //                .collect(Collectors.toList()))
 //               .containsExactlyInAnyOrder("1000","2000");
-//
+////
 ////    step 10: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 2 offers with ids: 1000 and 2000
 //
 //        //given
 //        ResultActions performGetTwoOffers = mockMvc.perform(get("/offers")
-//                                                    .accept(MediaType.APPLICATION_JSON));
+//                .header("Authorization", "Bearer " + token)
+//                .accept(MediaType.APPLICATION_JSON));
 //        //then
 //        MvcResult result= performGetTwoOffers.andExpect(status().isOk()).andReturn();
 //        String jSon = result.getResponse().getContentAsString();
@@ -161,11 +185,12 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 //                new OfferResponseDto(offerDto1.id(),offerDto1.companyName(),offerDto1.position(),offerDto1.salary(),offerDto1.offerUrl()),
 //                new OfferResponseDto(offerDto2.id(),offerDto2.companyName(),offerDto2.position(),offerDto2.salary(),offerDto2.offerUrl()))
 //        );
-//
+////
 ////    step 11: user made GET /offers/9999 and system returned NOT_FOUND(404) with message “Offer with id 9999 not found”
 //        // given
 //
-//        ResultActions performGetOffersNotExisitingId = mockMvc.perform(get("/offers/9999"));
+//        ResultActions performGetOffersNotExisitingId = mockMvc.perform(get("/offers/9999")
+//                .header("Authorization", "Bearer " + token));
 //        // then
 //        performGetOffersNotExisitingId.andExpect(status().isNotFound())
 //                .andExpect(content().json("""
@@ -174,11 +199,12 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 //                        "status": "NOT_FOUND"
 //                        }
 //                        """.trim()));
-//
+////
 ////    step 12: user made GET /offers/1000 and system returned OK(200) with offer
 //
 //        //given
-//        ResultActions performGetOffersWithId1000 = mockMvc.perform(get("/offers/1000"));
+//        ResultActions performGetOffersWithId1000 = mockMvc.perform(get("/offers/1000")
+//                .header("Authorization", "Bearer " + token));
 //        //when
 //
 //        String offerId1000Json = performGetOffersWithId1000.andExpect(status().isOk())
@@ -190,7 +216,7 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 //        //then
 //        assertThat(offerResponseDtoId1000.id()).isEqualTo("1000");
 //        assertThat(offerResponseDtoId1000).isEqualTo(offerDto1);
-//
+////
 ////    step 13: there are 2 new offers in external HTTP server
 //        wireMockServer.stubFor(WireMock.get("/offers")
 //                .willReturn(WireMock.aResponse()
@@ -201,14 +227,15 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 ////    step 14: scheduler ran 3rd time and made GET to external server and system added 2 new offers with ids: 3000 and 4000 to database
 //        List<OfferResponseDto> offerResponseDtos3 = httpOffersScheduler.fetchAllOffersAndSaveAllIfNotExists();
 //        assertThat(offerResponseDtos3).hasSize(2);
-//        //List<String> offersIdsList = offerResponseDtos3.stream().map((OfferResponseDto offer) -> offer.id()).collect(Collectors.toList());
-//
-//
-//
-////        assertThat(offersIdsList).contains("5000","6000");
+////        //List<String> offersIdsList = offerResponseDtos3.stream().map((OfferResponseDto offer) -> offer.id()).collect(Collectors.toList());
+////
+////
+////
+//////        assertThat(offersIdsList).contains("5000","6000");
 ////    step 15: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 4 offers with ids: 1000,2000, 3000 and 4000
 //        //given
 //        ResultActions performGetFourOffers = mockMvc.perform(get("/offers")
+//                .header("Authorization", "Bearer " + token)
 //                .accept(MediaType.APPLICATION_JSON));
 //        //then
 //
@@ -227,6 +254,7 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 //        // given
 //        // when
 //        ResultActions performPostOffersWithOneOffer = mockMvc.perform(post("/offers")
+//                .header("Authorization", "Bearer " + token)
 //                .content("""
 //                        {
 //                        "companyName": "someCompany",
@@ -254,17 +282,18 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 //        );
 ////    step 17: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 3 offer
 //        // given & when
-////        ResultActions peformGetOffers = mockMvc.perform(get("/offers")
-////                .contentType(MediaType.APPLICATION_JSON_VALUE)
-////        );
-////        // then
-////        String oneOfferJson = peformGetOffers.andExpect(status().isOk())
-////                .andReturn()
-////                .getResponse()
-////                .getContentAsString();
-////        List<OfferResponseDto> parsedJsonWithOneOffer = objectMapper.readValue(oneOfferJson, new TypeReference<>() {
-////        });
-////        assertThat(parsedJsonWithOneOffer).hasSize(3);
-////        assertThat(parsedJsonWithOneOffer.stream().map(OfferResponseDto::id)).contains(id);
+//        ResultActions peformGetOffers = mockMvc.perform(get("/offers")
+//                .header("Authorization", "Bearer " + token)
+//                .contentType(MediaType.APPLICATION_JSON_VALUE)
+//        );
+//        // then
+//        String oneOfferJson = peformGetOffers.andExpect(status().isOk())
+//                .andReturn()
+//                .getResponse()
+//                .getContentAsString();
+//        List<OfferResponseDto> parsedJsonWithOneOffer = objectMapper.readValue(oneOfferJson, new TypeReference<>() {
+//        });
+//        assertThat(parsedJsonWithOneOffer).hasSize(5);
+//        assertThat(parsedJsonWithOneOffer.stream().map(OfferResponseDto::id)).contains(id);
     }
 }
