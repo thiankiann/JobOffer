@@ -45,6 +45,9 @@ public class BaseIntegrationTest {
         registry.add("offer.http.client.config.uri", () -> WIRE_MOCK_HOST);
         registry.add("offer.http.client.config.port", () -> wireMockServer.getPort());
         registry.add("scheduling.enabled", () -> false);
+        registry.add("auth.jwt.secret", () -> "verySecretKeyThatHasToBeVeryLongForHS512AlgorithmToBeHappyAndNotThrowException");
+        registry.add("auth.jwt.expirationDays", () -> 30);
+        registry.add("auth.jwt.issuer", () -> "job-offers-backend");
     }
 }
 

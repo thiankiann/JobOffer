@@ -63,7 +63,6 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
                         .withHeader("Content-Type", "application/json")
                         .withBody(bodyWithZeroOffersJson())));
 
-        //maybe I should add assertion with get to mocked server??
 
         //step 2: scheduler ran 1st time and made GET to external server and system added 0 offers to database
         List<OfferResponseDto> offerResponseDtos = httpOffersScheduler.fetchAllOffersAndSaveAllIfNotExists();

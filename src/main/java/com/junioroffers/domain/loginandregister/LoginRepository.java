@@ -1,13 +1,13 @@
 package com.junioroffers.domain.loginandregister;
 
-import com.junioroffers.domain.loginandregister.dto.RegisterUserDto;
-import com.junioroffers.domain.loginandregister.dto.RegistrationResultDto;
-import com.junioroffers.domain.loginandregister.dto.UserDto;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-interface LoginRepository {
-    Optional<User> findUserByName(String username);
+@Repository
+public interface LoginRepository extends MongoRepository<User, String> {
 
-    User save(User user);
+    Optional<User> findByUsername(String username);
 }
+
