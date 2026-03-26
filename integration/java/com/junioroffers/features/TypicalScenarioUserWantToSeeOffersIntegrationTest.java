@@ -123,25 +123,25 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
                 () -> assertThat(registrationResultDto.id()).isNotNull()
         );
 
-////    step 6: user tried to get JWT token by requesting POST /token with username=someUser, password=somePassword and system returned OK(200) and jwttoken=AAAA.BBBB.CCC
-//        // given & when
-//        ResultActions loginRequest = mockMvc.perform(post("/token")
-//                .content("""
-//                        {
-//                        "username": "someUser",
-//                        "password": "somePassword"
-//                        }
-//                        """.trim())
-//                .contentType(MediaType.APPLICATION_JSON_VALUE)
-//        );
-//        // then
-//        MvcResult loginResult = loginRequest.andExpect(status().isOk()).andReturn();
-//        String loginResponseJson = loginResult.getResponse().getContentAsString();
-//        com.junioroffers.infrastructure.loginandregister.controller.dto.JwtResponseDto jwtResponse = objectMapper.readValue(loginResponseJson, com.junioroffers.infrastructure.loginandregister.controller.dto.JwtResponseDto.class);
-//        String token = jwtResponse.token();
-//        assertThat(token).isNotNull();
-//
-//
+//    step 6: user tried to get JWT token by requesting POST /token with username=someUser, password=somePassword and system returned OK(200) and jwttoken=AAAA.BBBB.CCC
+        // given & when
+        ResultActions loginRequest = mockMvc.perform(post("/token")
+                .content("""
+                        {
+                        "username": "someUser",
+                        "password": "somePassword"
+                        }
+                        """.trim())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+        // then
+        MvcResult loginResult = loginRequest.andExpect(status().isOk()).andReturn();
+        String loginResponseJson = loginResult.getResponse().getContentAsString();
+        com.junioroffers.infrastructure.loginandregister.controller.dto.JwtResponseDto jwtResponse = objectMapper.readValue(loginResponseJson, com.junioroffers.infrastructure.loginandregister.controller.dto.JwtResponseDto.class);
+        String token = jwtResponse.token();
+        assertThat(token).isNotNull();
+
+
 ////    step 7: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 0 offers
 //        // when
 //        ResultActions perform = mockMvc.perform(get("/offers")
