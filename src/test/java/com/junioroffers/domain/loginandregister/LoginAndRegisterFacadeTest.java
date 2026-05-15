@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Optional;
 
@@ -26,12 +28,12 @@ class LoginAndRegisterFacadeTest {
         //given
         String username = "Mariusz K";
         //when
-        Throwable thrown = catchThrowable(() ->loginFacade.findByUserName(username));
+        Throwable thrown = catchThrowable(() ->loginFacade.findByUsername(username));
         //then
-//        assertThat(thrown).isEqualTo("User not found");  //to nie jest String
+        assertThat(thrown).hasMessage("User not found");
         assertThat(thrown)
-                .isInstanceOf(UserNotFoundException.class)
-                .hasMessage("User not found");                 //just additional check
+                .isInstanceOf(BadCredentialsException.class)
+                .hasMessage("User not found");
     }
     @Test
     public void should_find_user_by_user_name(){
@@ -40,17 +42,11 @@ class LoginAndRegisterFacadeTest {
         RegistrationResultDto register = loginFacade.register(registerUserDto);
 
         // when
-        UserDto userByName = loginFacade.findByUserName(register.username());
+        UserDto userByName = loginFacade.findByUsername(register.username());
 
         // then
         assertThat(userByName).isEqualTo(new UserDto(register.id(), "password", "Mariusz"));
-//        //given
-//        User user = new User("1","Mariusz","password");
-//        //when
-//
-//        UserDto userDto = loginFacade.findByUserName("Mariusz");
-//        //then
-//        assertThat(userDto).isEqualTo(new UserDto(user.id(),user.password(),user.username()));
+
     }
     @Test
     public void should_register_user(){
@@ -63,7 +59,7 @@ class LoginAndRegisterFacadeTest {
         assertThat(isUserRegistered).isEqualTo(true);
         assertThat(registrationResultDto).isInstanceOf(new RegistrationResultDto(registrationResultDto.id(),true,"Mariusz").getClass()); // ?? nie dokonca jestem pewny czy to poprawnie zrobilem
         assertThat(registrationResultDto.username()).isEqualTo("Mariusz");
-        assertThat(registrationResultDto).isNotInstanceOf(UserNotFoundException.class);
+        assertThat(registrationResultDto).isNotInstanceOf(UsernameNotFoundException.class);
 
     }
 
