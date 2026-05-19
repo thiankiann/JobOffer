@@ -7,12 +7,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
+@EnableCaching
 @EnableMongoRepositories
 @EnableConfigurationProperties(value = {JwtConfigurationProperties.class})
 public class JobOffersApplication {

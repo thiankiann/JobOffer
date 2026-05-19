@@ -1,25 +1,12 @@
-#spring:
-#  data:
-#    mongodb:
-#      uri: mongodb://admin:admin@localhost:27017/offers
-#
-#offers:
-#    http:
-#      client:
-#        config:
-#          uri: http://ec2-3-127-218-34.eu-central-1.compute.amazonaws.com
-#          port: 5057
-#
-#          http:
-#            offers:
-#              scheduler:
-#                request:
-#                  delay: 300000 # 5 minut
-##                  delay: PT3H
-#
-#          scheduling:
-#            enabled: true
+
 spring:
+  redis:
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:63792}
+  cache:
+    type: redis
+    redis:
+      time-to-live: PT60M
   data:
     mongodb:
       uri: mongodb://root:example@localhost:27018/offers?authSource=admin
