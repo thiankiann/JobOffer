@@ -52,7 +52,7 @@ public class OfferFetcherRestTemplate implements OfferFetchable {
         } catch (ResourceAccessException e) {
             String urlForService = getUrlForService("/offers");
             log.warn("Could not fetch offers from {} due to I/O issue: {}.", urlForService, e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+            return Collections.emptyList();
         }
     }
 
